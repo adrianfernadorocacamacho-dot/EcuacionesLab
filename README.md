@@ -41,24 +41,4 @@ Laboratorio web educativo y gamificado potenciado por **Python, SymPy y Flask** 
 - **Efectos de Sonido Sintetizados (Web Audio API)**: Acordes musicales al acertar, alertas de fallo y fanfarria de récord sin requerir archivos de audio externos.
 - **Sistema de Logros y Medallas**: Desbloquea trofeos que se guardan en tu navegador (`Novato`, `Racha de Fuego`, `Rayo Veloz`, `Maestro de EDOs`).
 
-### 3. ƒ Resolutor Simbólico con Python y SymPy
-- **Resolución Analítica Paso a Paso**: Procedimiento completo con justificación matemática y renderizado en KaTeX.
-- **Modelos Guiados**: Crecimiento/decaimiento, Ley de enfriamiento de Newton, ecuaciones lineales de 1er orden, potencia y osciladores armónicos de 2º orden.
-- **Modo Entrada Libre (SymPy)**: Escribe cualquier ecuación diferencial directamente (ejemplo: `y' + 2*y = 4`, `y'' + 9*y = 0`) para resolverla con el motor simbólico de SymPy.
-- **Condiciones Iniciales**: Evaluación automática de soluciones particulares y previsualización de su curva.
 
-### 4. ⌁ Visualizador & Simulador Dinámico (4 Modelos)
-- **Crecimiento / Desintegración Exponencial**: Control de $k$ e $y_0$.
-- **Ley de Enfriamiento de Newton**: Simula la temperatura de una taza de café caliente enfriándose hacia la temperatura ambiente con recta asintótica.
-- **Oscilador Armónico Amortiguado**: Control de fricción $\gamma$ y frecuencia $\omega_0$ ilustrando los regímenes subamortiguado, crítico y sobreamortiguado.
-- **Campo de Direcciones (Slope Field)**: Cuadrícula interactiva de vectores tangentes en el plano $xy$ con la curva de solución navegando a través de ellos.
-
----
-
-## 📁 Archivos del Proyecto
-- `app.py`: Servidor backend en Python con Flask, SymPy y las APIs REST (`/api/status`, `/api/solve`, `/api/curiosities`, `/api/questions`, `/api/simulate`).
-- `iniciar_laboratorio.bat`: Lanzador de un solo clic para Windows.
-- `index.html`: Estructura HTML5 moderna y accesible.
-- `styles.css`: Sistema de diseño con glassmorphism, temas claro/oscuro y diseño responsivo para móviles y PC.
-- `script.js`: Controlador dinámico, sintetizador Web Audio, simulador Canvas y motor de juego.
-- `README.txt` / `README.md`: Documentación completa del proyecto.
