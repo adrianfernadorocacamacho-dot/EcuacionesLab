@@ -25,6 +25,7 @@
         <button class="nav-link" data-view="aprender" id="nav-aprender"><span class="glow-icon">✦</span> Aprende & Curiosidades</button>
         <button class="nav-link" data-view="practicar" id="nav-practicar"><span>◈</span> Trivia & Juego</button>
         <button class="nav-link" data-view="aplicaciones" id="nav-aplicaciones"><span>◉</span> Aplicaciones</button>
+        <button class="nav-link" data-view="formularios" id="nav-formularios"><span>📑</span> Formularios</button>
       </nav>
       <div class="sidebar-bottom">
         <div class="side-tip" id="dailyTip">
@@ -54,6 +55,7 @@
           Aula Virtual <span>/</span> <strong id="crumb">Inicio</strong>
         </div>
         <div class="top-actions">
+          <button class="topbar-btn-pill" data-go="formularios" title="Ver Formularios para Imprimir"><span>🖨️</span> Formularios</button>
           <div class="backend-pill" id="backendPill" title="Estado de la conexión">
             <span class="live-dot" id="liveDot"></span>
             <span id="backendStatusText">Detectando Python...</span>
@@ -73,6 +75,7 @@
             <div class="hero-actions">
               <button class="primary-button" data-go="practicar">¡Jugar la Trivia! <span>🎮</span></button>
               <button class="secondary-button" data-go="aprender">Aprende & Curiosidades <span>✦</span></button>
+              <button class="secondary-button" data-go="formularios">Formularios <span>📑</span></button>
             </div>
           </div>
           <div class="hero-art" aria-label="Ilustración matemática">
@@ -148,6 +151,14 @@
             <strong>Aplicaciones Prácticas</strong>
             <p>Descubre el impacto real en medicina forense, termodinámica, ecología, ingeniería y videojuegos.</p>
             <span class="card-arrow">Ver modelos ↗</span>
+          </button>
+
+          <button class="feature-card highlight-card-blue" data-go="formularios">
+            <span class="feature-icon purple">📑</span>
+            <span class="card-kicker">04 · TABLAS & FÓRMULAS</span>
+            <strong>Formularios Oficiales</strong>
+            <p>Tablas completas de Derivadas (32) e Integrales (53) con visor HD interactivo y búsqueda matemática.</p>
+            <span class="card-arrow">Consultar tablas ↗</span>
           </button>
         </div>
 
@@ -532,6 +543,65 @@
           <div>
             <strong>De la abstracción al beneficio humano</strong>
             <p>Una ecuación diferencial no es solo un ejercicio algebraico sobre papel: es una herramienta que permite predecir el futuro de un sistema físico antes de construirlo o suministrarlo.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- VISTA 8: FORMULARIOS MATEMÁTICOS PARA IMPRIMIR -->
+      <section class="view" id="view-formularios">
+        <div class="page-intro">
+          <div class="eyebrow">FORMULARIOS OFICIALES · DIFERENCIALLAB</div>
+          <h1>Formularios para Imprimir</h1>
+          <p>Selecciona el formulario que deseas consultar e imprimir en alta resolución: <strong>Tabla de Derivadas</strong> o <strong>Tabla de Integrales</strong>.</p>
+          <div class="intro-actions-bar">
+            <button class="primary-button print-main-btn" id="btnPrintSheet">
+              <span>🖨️ Imprimir Formulario</span>
+            </button>
+            <a href="tabla_derivadas.jpg" download="DiferencialLab_Tabla_Derivadas.jpg" class="secondary-button" id="btnDownloadActiveSheet">
+              <span>⬇️ Descargar Imagen</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- SELECTOR DE TABLAS (SOLO LAS 2 TABLAS) -->
+        <div class="form-selector-tabs form-selector-two" role="tablist">
+          <button class="form-tab-btn active" data-form="derivadas" id="tabBtnDerivadas">
+            <span class="tab-emoji">📈</span>
+            <div class="form-tab-text">
+              <strong>Tabla de Derivadas</strong>
+              <small>32 Fórmulas Oficiales</small>
+            </div>
+          </button>
+          <button class="form-tab-btn" data-form="integrales" id="tabBtnIntegrales">
+            <span class="tab-emoji">∬</span>
+            <div class="form-tab-text">
+              <strong>Tabla de Integrales</strong>
+              <small>53 Fórmulas Oficiales</small>
+            </div>
+          </button>
+        </div>
+
+        <!-- VISOR DE LÁMINA CON CONTROLES E IMPRESIÓN DIRECTA -->
+        <div class="panel form-image-panel" id="formImageContainer">
+          <div class="image-viewer-toolbar">
+            <div class="toolbar-left">
+              <span class="toolbar-sheet-name" id="toolbarSheetTitle">Lámina Oficial: TABLA DE DERIVADAS</span>
+            </div>
+            <div class="toolbar-center">
+              <button class="viewer-btn" id="btnZoomOut" title="Alejar (Zoom -)">−</button>
+              <span class="zoom-display" id="zoomLevelDisplay">100%</span>
+              <button class="viewer-btn" id="btnZoomIn" title="Acercar (Zoom +)">+</button>
+              <button class="viewer-btn reset-btn" id="btnZoomReset" title="Restablecer tamaño">⟲ 100%</button>
+            </div>
+            <div class="toolbar-right">
+              <button class="viewer-btn print-quick-btn" id="btnQuickPrint">🖨️ Imprimir</button>
+            </div>
+          </div>
+
+          <div class="image-stage" id="imageStage">
+            <div class="image-viewport" id="imageViewport">
+              <img src="tabla_derivadas.jpg?v=4" alt="Tabla de Derivadas DiferencialLab" class="formula-sheet-img" id="mainFormulaImg">
+            </div>
           </div>
         </div>
       </section>

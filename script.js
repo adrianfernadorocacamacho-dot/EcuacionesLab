@@ -10,13 +10,14 @@
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 
-const views = ["inicio", "aprender", "curiosidades", "practicar", "aplicaciones"];
+const views = ["inicio", "aprender", "curiosidades", "practicar", "aplicaciones", "formularios"];
 const labels = {
   inicio: "Inicio",
   aprender: "Aprende & Curiosidades",
   curiosidades: "Aprende & Curiosidades",
   practicar: "Trivia & Juego",
-  aplicaciones: "Aplicaciones"
+  aplicaciones: "Aplicaciones",
+  formularios: "Formularios"
 };
 
 // Variable de estado de conectividad con el backend de Python
@@ -137,6 +138,9 @@ function go(view) {
   if (view === "aprender") {
     renderStudyAnswers();
     renderCuriosities();
+  }
+  if (view === "formularios") {
+    initFormulariosView();
   }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -2000,4 +2004,188 @@ document.addEventListener("DOMContentLoaded", async () => {
   await checkPythonBackend();
   renderCuriosities();
   renderStudyAnswers();
+  initFormulariosView();
 });
+
+// ==============================================================================
+// 11. MÓDULO DE FORMULARIOS PARA IMPRIMIR (DERIVADAS & INTEGRALES)
+// ==============================================================================
+
+const FORMULAS_SHEETS = {
+  derivadas: {
+    title: "Tabla de Derivadas",
+    sheetName: "Lámina Oficial: TABLA DE DERIVADAS",
+    image: "tabla_derivadas.jpg",
+    downloadName: "DiferencialLab_Tabla_Derivadas.jpg"
+  },
+  integrales: {
+    title: "Tabla de Integrales",
+    sheetName: "Lámina Oficial: TABLA DE INTEGRALES",
+    image: "tabla_integrales.jpg",
+    downloadName: "DiferencialLab_Tabla_Integrales.jpg"
+  }
+};
+
+let currentFormKey = "derivadas";
+let mainZoom = 1.0;
+let isFormulariosInitialized = false;
+
+function applyMainZoom() {
+  const viewport = $("#imageViewport");
+  const display = $("#zoomLevelDisplay");
+  if (viewport) {
+    viewport.style.transform = `scale(${mainZoom})`;
+  }
+  if (display) {
+    display.textContent = `${Math.round(mainZoom * 100)}%`;
+  }
+}
+
+function switchFormTable(key) {
+  if (!FORMULAS_SHEETS[key]) return;
+  currentFormKey = key;
+  sfx.click();
+
+  // Actualizar botones de pestañas
+  $$(".form-tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.form === key);
+  });
+
+  const data = FORMULAS_SHEETS[key];
+
+  // Actualizar imagen principal
+  const mainImg = $("#mainFormulaImg");
+  if (mainImg) {
+    mainImg.src = data.image + "?v=4";
+    mainImg.alt = data.title;
+  }
+
+  // Actualizar título de la lámina
+  const titleEl = $("#toolbarSheetTitle");
+  if (titleEl) titleEl.textContent = data.sheetName;
+
+  // Actualizar enlace de descarga
+  const dlLink = $("#btnDownloadActiveSheet");
+  if (dlLink) {
+    dlLink.href = data.image;
+    dlLink.download = data.downloadName;
+  }
+
+  // Restablecer zoom
+  mainZoom = 1.0;
+  applyMainZoom();
+}
+
+function printFormulario() {
+  sfx.click();
+  const data = FORMULAS_SHEETS[currentFormKey];
+  if (!data) return;
+
+  // Creamos una ventana de impresión limpia con solo la imagen en máxima resolución
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) {
+    // Si el navegador bloqueó la ventana emergente, usamos la impresión directa del navegador
+    window.print();
+    return;
+  }
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>${data.title} - DiferencialLab</title>
+      <style>
+        @page {
+          size: auto;
+          margin: 6mm;
+        }
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          background: #ffffff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+        }
+        img {
+          max-width: 100%;
+          max-height: 98vh;
+          width: auto;
+          height: auto;
+          display: block;
+          object-fit: contain;
+          page-break-inside: avoid;
+        }
+      </style>
+    </head>
+    <body>
+      <img src="${data.image}" alt="${data.title}" onload="setTimeout(() => { window.print(); window.close(); }, 300);" />
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+function initFormulariosView() {
+  if (isFormulariosInitialized) return;
+  isFormulariosInitialized = true;
+
+  // Pestañas para alternar entre Derivadas e Integrales
+  $$(".form-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => switchFormTable(btn.dataset.form));
+  });
+
+  // Botones de Imprimir
+  const btnPrintSheet = $("#btnPrintSheet");
+  if (btnPrintSheet) btnPrintSheet.addEventListener("click", printFormulario);
+
+  const btnQuickPrint = $("#btnQuickPrint");
+  if (btnQuickPrint) btnQuickPrint.addEventListener("click", printFormulario);
+
+  // Controles de Zoom
+  const btnZIn = $("#btnZoomIn");
+  if (btnZIn) {
+    btnZIn.addEventListener("click", () => {
+      mainZoom = Math.min(2.5, mainZoom + 0.2);
+      applyMainZoom();
+    });
+  }
+
+  const btnZOut = $("#btnZoomOut");
+  if (btnZOut) {
+    btnZOut.addEventListener("click", () => {
+      mainZoom = Math.max(0.6, mainZoom - 0.2);
+      applyMainZoom();
+    });
+  }
+
+  const btnZReset = $("#btnZoomReset");
+  if (btnZReset) {
+    btnZReset.addEventListener("click", () => {
+      mainZoom = 1.0;
+      applyMainZoom();
+    });
+  }
+
+  // Zoom con rueda de ratón en la lámina
+  const stage = $("#imageStage");
+  if (stage) {
+    stage.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        mainZoom = Math.min(2.5, mainZoom + 0.1);
+      } else {
+        mainZoom = Math.max(0.6, mainZoom - 0.1);
+      }
+      applyMainZoom();
+    }, { passive: false });
+  }
+
+  // Cargar estado inicial
+  switchFormTable("derivadas");
+}
