@@ -1,0 +1,57 @@
+      <section class="view" id="view-formularios">
+        <div class="page-intro">
+          <div class="eyebrow">FORMULARIOS OFICIALES · DIFERENCIALLAB</div>
+          <h1>Formularios para Imprimir</h1>
+          <p>Selecciona el formulario que deseas consultar e imprimir en alta resolución: <strong>Tabla de Derivadas</strong> o <strong>Tabla de Integrales</strong>.</p>
+          <div class="intro-actions-bar">
+            <button class="primary-button print-main-btn" id="btnPrintSheet">
+              <span>🖨️ Imprimir Formulario</span>
+            </button>
+            <a href="tabla_derivadas.jpg" download="DiferencialLab_Tabla_Derivadas.jpg" class="secondary-button" id="btnDownloadActiveSheet">
+              <span>⬇️ Descargar Imagen</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- SELECTOR DE TABLAS (SOLO LAS 2 TABLAS) -->
+        <div class="form-selector-tabs form-selector-two" role="tablist">
+          <button class="form-tab-btn active" data-form="derivadas" id="tabBtnDerivadas">
+            <span class="tab-emoji">📈</span>
+            <div class="form-tab-text">
+              <strong>Tabla de Derivadas</strong>
+              <small>32 Fórmulas Oficiales</small>
+            </div>
+          </button>
+          <button class="form-tab-btn" data-form="integrales" id="tabBtnIntegrales">
+            <span class="tab-emoji">∬</span>
+            <div class="form-tab-text">
+              <strong>Tabla de Integrales</strong>
+              <small>53 Fórmulas Oficiales</small>
+            </div>
+          </button>
+        </div>
+
+        <!-- VISOR DE LÁMINA CON CONTROLES E IMPRESIÓN DIRECTA -->
+        <div class="panel form-image-panel" id="formImageContainer">
+          <div class="image-viewer-toolbar">
+            <div class="toolbar-left">
+              <span class="toolbar-sheet-name" id="toolbarSheetTitle">Lámina Oficial: TABLA DE DERIVADAS</span>
+            </div>
+            <div class="toolbar-center">
+              <button class="viewer-btn" id="btnZoomOut" title="Alejar (Zoom -)">−</button>
+              <span class="zoom-display" id="zoomLevelDisplay">100%</span>
+              <button class="viewer-btn" id="btnZoomIn" title="Acercar (Zoom +)">+</button>
+              <button class="viewer-btn reset-btn" id="btnZoomReset" title="Restablecer tamaño">⟲ 100%</button>
+            </div>
+            <div class="toolbar-right">
+              <button class="viewer-btn print-quick-btn" id="btnQuickPrint">🖨️ Imprimir</button>
+            </div>
+          </div>
+
+          <div class="image-stage" id="imageStage">
+            <div class="image-viewport" id="imageViewport">
+              <img src="tabla_derivadas.jpg?v=4" alt="Tabla de Derivadas DiferencialLab" class="formula-sheet-img" id="mainFormulaImg">
+            </div>
+          </div>
+        </div>
+      </section>

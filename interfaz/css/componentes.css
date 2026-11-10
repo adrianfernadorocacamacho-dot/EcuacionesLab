@@ -1,0 +1,141 @@
+/* ==============================================================================
+   PANELES Y PROGRESO
+   ============================================================================== */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+  margin-top: 15px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+.welcome-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.panel h3, .solver-controls h3, .solution-panel h3, .graph-panel h3 {
+  font: 700 18px 'Space Grotesk', sans-serif;
+  margin: 6px 0;
+  color: #ffffff;
+}
+
+.welcome-panel p, .progress-panel > p {
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: #c4b5fd;
+  max-width: 420px;
+}
+
+.mini-equation {
+  border-left: 2px solid rgba(168, 85, 247, 0.4);
+  padding-left: 18px;
+  min-width: 110px;
+  font: 13px/1.8 'Space Grotesk', sans-serif;
+  color: #ddd6fe;
+}
+
+.mini-equation span {
+  color: var(--purple);
+}
+
+.text-button {
+  border: 0;
+  background: none;
+  padding: 6px 0;
+  color: var(--blue);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+  color: #ec4899;
+}
+
+.panel-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-ring {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  font-size: 20px;
+  background: rgba(30, 18, 56, 0.9);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+}
+
+.progress-track, .quiz-progress {
+  height: 6px;
+  background: rgba(45, 26, 80, 0.6);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-track span, .quiz-progress span {
+  height: 100%;
+  display: block;
+  width: 0;
+  background: linear-gradient(90deg, #10b981, #38bdf8 50%, #ec4899);
+  transition: width 0.3s ease;
+}
+
+.progress-caption {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 10px;
+  color: #c4b5fd;
+}
+
+.progress-caption strong {
+  color: var(--mint);
+  font-size: 11px;
+}
+
+.badge-mini-shelf {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.badge-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: rgba(30, 18, 56, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: #ddd6fe;
+}
+
+.badge-tag.unlocked {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #6ee7b7;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+}
+
+.badge-tag.locked {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+

@@ -1,0 +1,259 @@
+/* ==============================================================================
+   MÓDULO: RESOLUTOR EN PYTHON & SYMPY
+   ============================================================================== */
+.solver-layout {
+  display: grid;
+  grid-template-columns: 370px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.solver-controls {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.solution-panel {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.solver-mode-selector {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0 16px;
+  background: rgba(14, 8, 30, 0.9);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+.mode-btn {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: #c4b5fd;
+  padding: 9px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.mode-btn.active {
+  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.solver-controls label, .graph-controls label {
+  display: block;
+  font-size: 11px;
+  color: #c4b5fd;
+  margin: 14px 0 6px;
+  font-weight: 600;
+}
+
+.solver-controls input, .solver-controls select {
+  width: 100%;
+  background: rgba(14, 8, 30, 0.9);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #ffffff;
+  outline: none;
+  font-size: 13px;
+}
+
+.solver-controls input:focus, .solver-controls select:focus {
+  border-color: #ec4899;
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.3);
+}
+
+.input-examples {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 10.5px;
+  color: #a5b4fc;
+}
+
+.example-chip {
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(26, 15, 52, 0.8);
+  color: var(--blue);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.example-chip:hover {
+  background: rgba(168, 85, 247, 0.35);
+  color: #ffffff;
+  border-color: #a855f7;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ics-section {
+  border-top: 1px solid rgba(139, 92, 246, 0.25);
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.full {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.small-note {
+  font-size: 10.5px;
+  color: #a5b4fc;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+.equation-display-box {
+  background: rgba(14, 8, 30, 0.9);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-align: center;
+  margin: 14px 0;
+  font-size: 18px;
+  color: #38bdf8;
+  overflow-x: auto;
+}
+
+.solution-steps {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.step {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(26, 15, 52, 0.7);
+  border-radius: 10px;
+  border-left: 3px solid var(--purple);
+}
+
+.step-num {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: rgba(139, 92, 246, 0.3);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.step strong {
+  display: block;
+  font-size: 12.5px;
+  margin-bottom: 3px;
+  color: #ffffff;
+}
+
+.step p {
+  font-size: 11.5px;
+  color: #c4b5fd;
+  margin: 0;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.step-math-box {
+  background: rgba(14, 8, 30, 0.85);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 6px;
+  color: #38bdf8;
+  overflow-x: auto;
+  font-size: 14px;
+}
+
+.light-mode .step-math-box {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0284c7;
+}
+
+.panel-header-clean {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.answer-box {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  background: rgba(16, 185, 129, 0.12);
+  border-radius: 12px;
+}
+
+.answer-box span {
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: 1.3px;
+  color: #34d399;
+  font-weight: 700;
+}
+
+.answer-box strong {
+  display: block;
+  font: 700 18px 'Space Grotesk', sans-serif;
+  color: #6ee7b7;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+
+.solution-mini-chart {
+  margin-top: 16px;
+  background: rgba(14, 8, 30, 0.9);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 12px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+#miniSolverCanvas {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 130px;
+  display: block;
+}
+
+.mini-chart-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: #c4b5fd;
+  margin-bottom: 8px;
+}
+
+.badge-chip {
+  background: rgba(139, 92, 246, 0.25);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 9.5px;
+}
+

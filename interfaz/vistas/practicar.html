@@ -1,0 +1,143 @@
+      <section class="view" id="view-practicar">
+        <div class="page-intro">
+          <div class="eyebrow">MÓDULO 05 · LABORATORIO DE JUEGO & AUTOEVALUACIÓN</div>
+          <h1>DiferencialTrivia: Banco de Preguntas.</h1>
+          <p>Pon a prueba tus conocimientos con preguntas aleatorias, rachas de combo, vidas y explicaciones didácticas.</p>
+        </div>
+
+        <!-- SELECTOR DE MODO DE JUEGO -->
+        <div class="game-modes-grid" id="gameModeSelection">
+          <div class="game-mode-card" data-mode="desafio">
+            <div class="mode-icon">⏱️</div>
+            <h3>Modo Desafío Exprés</h3>
+            <p>10 preguntas aleatorias con temporizador de 20s. ¡Gana puntos extra por rapidez y combo!</p>
+            <span class="mode-btn-start">Iniciar Desafío <span>→</span></span>
+          </div>
+
+          <div class="game-mode-card" data-mode="supervivencia">
+            <div class="mode-icon">❤️</div>
+            <h3>Modo Supervivencia</h3>
+            <p>Empiezas con 3 vidas. Cada error te resta un corazón. ¿Hasta qué ronda podrás llegar?</p>
+            <span class="mode-btn-start">Probar Resistencia <span>→</span></span>
+          </div>
+
+          <div class="game-mode-card" data-mode="practica">
+            <div class="mode-icon">🎓</div>
+            <h3>Práctica Libre</h3>
+            <p>Aprende a tu propio ritmo sin presión de tiempo, con explicaciones detalladas en cada respuesta.</p>
+            <span class="mode-btn-start">Entrenar sin Prisa <span>→</span></span>
+          </div>
+        </div>
+
+        <!-- TABLERO DE JUEGO ACTIVO -->
+        <div class="quiz-layout" id="activeGameArea" style="display: none;">
+          <div class="panel quiz-panel">
+            <!-- HUD SUPERIOR DEL JUEGO -->
+            <div class="game-hud">
+              <div class="hud-left">
+                <span class="quiz-tag" id="gameModeBadge">MODO DESAFÍO</span>
+                <span id="quizCounter" class="hud-counter">PREGUNTA 1 DE 10</span>
+              </div>
+              <div class="hud-center" id="hudTimerArea">
+                <span class="timer-icon">⏳</span>
+                <span id="timerSeconds">20s</span>
+              </div>
+              <div class="hud-right">
+                <div class="lives-container" id="livesDisplay" style="display:none;">
+                  <span class="heart active">❤️</span>
+                  <span class="heart active">❤️</span>
+                  <span class="heart active">❤️</span>
+                </div>
+                <div class="combo-badge" id="comboBadge" style="display:none;">
+                  <span>🔥</span> <strong id="comboMultiplier">x2 COMBO</strong>
+                </div>
+                <div class="score-display">
+                  <span class="score-label">PUNTOS</span>
+                  <strong id="quizScore">0</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- BARRA DE TIEMPO / PROGRESO -->
+            <div class="quiz-progress">
+              <span id="quizProgressBar"></span>
+            </div>
+
+            <!-- ENUNCIADO DE LA PREGUNTA -->
+            <div class="question-meta">
+              <span class="question-category" id="questionCategory">Conceptos Fundamentales</span>
+              <span class="question-difficulty" id="questionDifficulty">Fácil</span>
+            </div>
+            <h2 id="questionText">Cargando pregunta...</h2>
+
+            <!-- OPCIONES DE RESPUESTA -->
+            <div id="answerOptions" class="answer-options"></div>
+
+            <!-- RETROALIMENTACIÓN DIDÁCTICA -->
+            <div id="feedback" class="feedback" aria-live="polite"></div>
+
+            <!-- PIE DEL JUEGO -->
+            <div class="quiz-footer">
+              <button class="secondary-button" id="btnExitGame">Salir al menú</button>
+              <button class="primary-button" id="nextQuestion" disabled>Siguiente pregunta <span>→</span></button>
+            </div>
+          </div>
+
+          <!-- PANEL LATERAL DE LOGROS Y DATOS -->
+          <aside class="panel quiz-aside">
+            <span class="feature-icon orange">◈</span>
+            <h3>Laboratorio de Retos</h3>
+            <p>Cada pregunta está basada en el temario de ecuaciones diferenciales y sus aplicaciones del mundo real.</p>
+            
+            <div class="aside-stat">
+              <strong>32</strong>
+              <span>Preguntas en el banco aleatorio</span>
+            </div>
+
+            <div class="aside-stat">
+              <strong id="statCurrentStreak">0</strong>
+              <span>Racha de aciertos actual</span>
+            </div>
+
+            <div class="aside-stat">
+              <strong id="statBestScore">0</strong>
+              <span>Tu récord histórico de puntos</span>
+            </div>
+
+            <div class="quiz-quote">
+              <em>"El error es la puerta del aprendizaje. Lee las explicaciones para dominar el método."</em>
+            </div>
+          </aside>
+        </div>
+
+        <!-- PANTALLA DE RESULTADOS DEL JUEGO -->
+        <div class="panel game-result-screen" id="gameResultScreen" style="display:none;">
+          <div class="result-celebration" id="resultCelebrationEmoji">🎉</div>
+          <h2 id="resultTitle">¡Partida Completada!</h2>
+          <p id="resultSubtitle">Has demostrado un excelente dominio de las ecuaciones diferenciales.</p>
+          
+          <div class="result-stats-row">
+            <div class="result-stat-box">
+              <span class="stat-number" id="resScore">850</span>
+              <span class="stat-label">Puntos Totales</span>
+            </div>
+            <div class="result-stat-box">
+              <span class="stat-number" id="resCorrect">8/10</span>
+              <span class="stat-label">Aciertos</span>
+            </div>
+            <div class="result-stat-box">
+              <span class="stat-number" id="resMaxStreak">5</span>
+              <span class="stat-label">Mejor Racha 🔥</span>
+            </div>
+            <div class="result-stat-box">
+              <span class="stat-number" id="resAccuracy">80%</span>
+              <span class="stat-label">Precisión</span>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button class="primary-button" id="btnPlayAgain">Jugar Otra Ronda <span>↻</span></button>
+            <button class="secondary-button" id="btnBackToModes">Elegir Otro Modo</button>
+          </div>
+        </div>
+      </section>

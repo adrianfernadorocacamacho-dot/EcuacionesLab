@@ -1,0 +1,133 @@
+      <section class="view active" id="view-inicio">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="spark">✦</span> DIFERENCIALLAB · VERSIÓN 2.0</div>
+            <h1>Las matemáticas<br>cobran <span>vida real.</span></h1>
+            <p>Descubre el mundo de las <strong>ecuaciones diferenciales</strong> de forma didáctica: resuelve paso a paso con explicaciones claras, aprende fundamentos teóricos, descubre anécdotas insólitas y pon a prueba tus conocimientos en la Trivia.</p>
+            <div class="hero-actions">
+              <button class="primary-button" data-go="resolver">Calculadora <span>⚡</span></button>
+              <button class="secondary-button" data-go="practicar">¡Jugar la Trivia! <span>🎮</span></button>
+              <button class="secondary-button" data-go="aprender">Aprende & Curiosidades <span>✦</span></button>
+              <button class="secondary-button" data-go="formularios">Formularios <span>📑</span></button>
+            </div>
+          </div>
+          <div class="hero-art" aria-label="Ilustración matemática">
+            <div class="orb orb-one"></div><div class="orb orb-two"></div>
+            <div class="formula formula-one">dy/dx = f(x, y)</div>
+            <div class="formula formula-two">y = C·e<sup>kx</sup></div>
+            <div class="formula formula-three">m·y″ + c·y′ + k·y = 0</div>
+            <svg viewBox="0 0 420 280" role="img" aria-label="Gráfico de ondas y exponenciales">
+              <defs>
+                <linearGradient id="curveGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#54e4ff"/>
+                  <stop offset="100%" stop-color="#8a7dff"/>
+                </linearGradient>
+              </defs>
+              <g stroke="#355577" stroke-width="1" opacity=".35">
+                <path d="M30 30V250M80 30V250M130 30V250M180 30V250M230 30V250M280 30V250M330 30V250M380 30V250"/>
+                <path d="M25 50H400M25 90H400M25 130H400M25 170H400M25 210H400M25 250H400"/>
+              </g>
+              <path d="M25 220 C70 218,90 205,125 180 S180 110,215 95 S300 80,395 24" fill="none" stroke="url(#curveGrad)" stroke-width="3.5" stroke-linecap="round"/>
+              <path d="M25 235 C80 220,115 205,155 195 S240 145,280 120 S350 105,395 80" fill="none" stroke="#7d8cff" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+              <path d="M25 75 C85 110,120 125,165 135 S255 175,300 200 S360 220,395 230" fill="none" stroke="#45d6b5" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+              <circle cx="215" cy="95" r="6" fill="#e4fbff" stroke="#54e4ff" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="hero-footer">
+            <span>01 / LABORATORIO EDUCATIVO ACTIVO</span>
+            <span>FUNDAMENTOS · HISTORIA · RULETA INTERACTIVA · BANCO DE 32 PREGUNTAS · FORMULARIOS OFICIALES</span>
+          </div>
+        </div>
+
+        <!-- TARJETA DESTACADA: DATO CURIOSO DEL DÍA -->
+        <div class="spotlight-card" id="spotlightCuriosity">
+          <div class="spotlight-badge"><span class="spark">⚡</span> DATO CURIOSO DESTACADO</div>
+          <div class="spotlight-content">
+            <div class="spotlight-icon" id="spotlightIcon">🌉</div>
+            <div class="spotlight-info">
+              <h3 id="spotlightTitle">El Colapso del Puente de Tacoma Narrows</h3>
+              <p id="spotlightText">En 1940, un viento moderado de 68 km/h generó vórtices periódicos que coincidieron exactamente con la frecuencia natural de torsión del puente. El fenómeno se modela matemáticamente con la EDO de segundo orden de un oscilador forzado.</p>
+            </div>
+            <button class="accent-btn" id="btnNextCuriosity" title="Descubrir otro dato curioso">¡Otro dato! ↻</button>
+          </div>
+        </div>
+
+        <!-- RUTA DE APRENDIZAJE -->
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">TU RUTA DE APRENDIZAJE</div>
+            <h2>¿Qué te gustaría explorar hoy?</h2>
+          </div>
+          <span class="muted">Elige un módulo para comenzar</span>
+        </div>
+
+        <div class="feature-grid">
+          <button class="feature-card highlight-card" data-go="resolver">
+            <span class="feature-icon blue">⚡</span>
+            <span class="card-kicker">01 · RESOLUTOR PASO A PASO</span>
+            <strong>Calculadora</strong>
+            <p>Resuelve analíticamente cualquier EDO con procedimiento detallado paso a paso para estudiantes, PVI y gráfica.</p>
+            <span class="card-arrow">Calcular ahora ↗</span>
+          </button>
+
+          <button class="feature-card" data-go="aprender">
+            <span class="feature-icon yellow">✦</span>
+            <span class="card-kicker">02 · FUNDAMENTOS & HISTORIA</span>
+            <strong>Aprende & Curiosidades</strong>
+            <p>Bases teóricas, métodos de solución, anécdotas insólitas con el dado interactivo y banco de estudio.</p>
+            <span class="card-arrow">Comenzar a aprender ↗</span>
+          </button>
+
+          <button class="feature-card special-card" data-go="practicar">
+            <span class="feature-icon orange">◈</span>
+            <span class="card-kicker">03 · JUEGO & AUTOEVALUACIÓN</span>
+            <strong>Trivia de Preguntas</strong>
+            <p>Modo Desafío Contrarreloj, Modo Supervivencia con 3 vidas, racha de combos y medallas desbloqueables.</p>
+            <span class="card-arrow">¡Jugar ahora! ↗</span>
+          </button>
+
+          <button class="feature-card highlight-card-blue" data-go="formularios">
+            <span class="feature-icon purple">📑</span>
+            <span class="card-kicker">04 · TABLAS & FÓRMULAS</span>
+            <strong>Formularios Oficiales</strong>
+            <p>Tablas completas de Derivadas (32) e Integrales (53) con visor HD interactivo y búsqueda matemática.</p>
+            <span class="card-arrow">Consultar tablas ↗</span>
+          </button>
+        </div>
+
+        <div class="bottom-grid">
+          <div class="panel welcome-panel">
+            <div>
+              <div class="eyebrow">EL PODER DE LAS EDOS</div>
+              <h3>Modelar la realidad en cambio continuo.</h3>
+              <p>Las ecuaciones diferenciales son el lenguaje con el que la naturaleza describe cómo cambia el universo: desde la órbita de un planeta hasta cómo se disuelve una medicina en tu cuerpo.</p>
+              <button class="text-button" data-go="curiosidades">Descubre datos fascinantes <span>→</span></button>
+            </div>
+            <div class="mini-equation">
+              cambio<br><span>→</span> EDO<br><span>→</span> solución
+            </div>
+          </div>
+
+          <div class="panel progress-panel">
+            <div class="panel-title">
+              <div>
+                <div class="eyebrow">TU PROGRESO EN EL JUEGO</div>
+                <h3 id="panelLevelTitle">Nivel: Iniciado Matemático</h3>
+              </div>
+              <span class="progress-ring" id="trophyIcon">🏆</span>
+            </div>
+            <p>Gana puntos en la Trivia respondiendo preguntas aleatorias del banco.</p>
+            <div class="progress-track"><span id="progressBar"></span></div>
+            <div class="progress-caption">
+              <span id="progressText">Puntuación máxima: 0 pts</span>
+              <strong id="progressScore">0%</strong>
+            </div>
+            <div class="badge-mini-shelf" id="miniBadges">
+              <span class="badge-tag locked" id="badge-1" title="Primer Reto Superado">🎖️ Novato</span>
+              <span class="badge-tag locked" id="badge-2" title="Racha de 5 aciertos">🔥 Racha</span>
+              <span class="badge-tag locked" id="badge-3" title="Respuestas Rápidas">⚡ Rayo</span>
+              <span class="badge-tag locked" id="badge-4" title="Maestro de EDOs">🧠 Maestro</span>
+            </div>
+          </div>
+        </div>
+      </section>

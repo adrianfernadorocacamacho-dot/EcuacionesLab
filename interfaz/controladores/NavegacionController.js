@@ -13,7 +13,6 @@ export class NavegacionController {
       "aprender",
       "curiosidades",
       "practicar",
-      "aplicaciones",
       "formularios"
     ];
     this.etiquetas = {
@@ -22,7 +21,6 @@ export class NavegacionController {
       aprender: "Aprende & Curiosidades",
       curiosidades: "Aprende & Curiosidades",
       practicar: "Trivia & Juego",
-      aplicaciones: "Aplicaciones Reales",
       formularios: "Formularios Oficiales"
     };
   }
@@ -54,7 +52,7 @@ export class NavegacionController {
   }
 
   irA(vista) {
-    if (vista === "curiosidades" || vista === "visualizar") {
+    if (vista === "curiosidades" || vista === "visualizar" || vista === "aplicaciones") {
       vista = "aprender";
     }
     if (!this.vistasValidas.includes(vista)) return;

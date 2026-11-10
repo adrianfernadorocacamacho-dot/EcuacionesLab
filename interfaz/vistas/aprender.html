@@ -1,0 +1,98 @@
+      <section class="view" id="view-aprender">
+        <div class="page-intro">
+          <div class="eyebrow">MÓDULO 01 · GUÍA DIDÁCTICA, TEORÍA & HISTORIA</div>
+          <h1>Aprende los conceptos y descubre la historia de las EDOs.</h1>
+          <p>Explora las bases teóricas, tira el dado en la Ruleta de Curiosidades interactiva y estudia las explicaciones oficiales con sus preguntas resueltas.</p>
+        </div>
+
+        <!-- RULETA DE CURIOSIDADES INTERACTIVA CON EL DADO -->
+        <div class="panel curiosity-hero-panel">
+          <div class="curiosity-dice-area">
+            <span class="dice-emoji" id="mainDiceIcon" title="¡Haz clic en el dado para rodarlo!">🎲</span>
+            <div>
+              <h3>Ruleta de Curiosidades & Anécdotas</h3>
+              <p>Haz clic en el botón o en el dado para descubrir un misterio o hecho histórico fascinante al azar.</p>
+            </div>
+            <button class="primary-button" id="btnRollCuriosity">¡Tirar el dado y descubrir dato! <span>🎲✨</span></button>
+          </div>
+          <div class="curiosity-featured-box" id="curiosityFeaturedCard">
+            <!-- Cargado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- PESTAÑAS DE TEMAS TEÓRICOS -->
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow"><span class="spark">📘</span> TEORÍA ESENCIAL</div>
+            <h2>Conceptos y Métodos Fundamentales</h2>
+          </div>
+          <span class="muted">Selecciona un tema para estudiar</span>
+        </div>
+
+        <div class="topic-tabs" role="tablist">
+          <button class="topic-tab active" data-topic="concepto">Concepto & Definición</button>
+          <button class="topic-tab" data-topic="clasificacion">Orden, Grado & Linealidad</button>
+          <button class="topic-tab" data-topic="metodos">Métodos de Solución</button>
+          <button class="topic-tab" data-topic="segundo_orden">Segundo Orden & Oscilaciones</button>
+        </div>
+        <div class="panel lesson-panel" id="lessonContent"></div>
+        <div class="callout">
+          <span>✦</span>
+          <div>
+            <strong>Regla de oro de las soluciones</strong>
+            <p>Una función es solución de una ecuación diferencial si al sustituirla junto con sus derivadas en la ecuación, se satisface la igualdad para todo valor del intervalo de definición.</p>
+          </div>
+        </div>
+
+        <!-- MISTERIOS Y ANÉCDOTAS POR CATEGORÍAS -->
+        <div class="section-heading" style="margin-top: 36px;">
+          <div>
+            <div class="eyebrow"><span class="spark">🏛️</span> ARCHIVO DE HISTORIAS</div>
+            <h2>Historias Humanas y Misterios de las EDOs</h2>
+          </div>
+          <span class="muted">Filtra por categoría de interés</span>
+        </div>
+
+        <div class="category-filter-bar">
+          <button class="filter-chip active" data-cat="todas">Todos los temas</button>
+          <button class="filter-chip" data-cat="historia">🏛️ Historia & Rivalidades</button>
+          <button class="filter-chip" data-cat="mundo_real">🌍 En el Mundo Real</button>
+          <button class="filter-chip" data-cat="tecnologia">🎮 Tecnología & Juegos</button>
+          <button class="filter-chip" data-cat="anecdotas">💡 Anécdotas Científicas</button>
+        </div>
+
+        <div class="curiosity-grid" id="curiosityGrid">
+          <!-- Renderizado dinámicamente con JavaScript -->
+        </div>
+
+        <!-- SECCIÓN DE RESPUESTAS EXPLICADAS PARA APRENDER ANTES DE JUGAR -->
+        <div class="study-guide-header" style="margin-top: 40px;">
+          <div>
+            <div class="eyebrow"><span class="spark">📖</span> BANCO DE ESTUDIO OFICIAL</div>
+            <h2>Preguntas y Respuestas para Estudiar</h2>
+            <p>Aquí tienes las 32 preguntas de la Trivia con sus respuestas correctas reveladas, explicadas paso a paso y con consejos para que aprendas antes de entrar al juego.</p>
+          </div>
+          <button class="primary-button" data-go="practicar">
+            <span>¡Ir a Jugar la Trivia!</span> <span>🎮</span>
+          </button>
+        </div>
+
+        <!-- BARRA DE BÚSQUEDA Y FILTROS DEL BANCO DE ESTUDIO -->
+        <div class="study-search-wrap">
+          <input type="text" id="studySearchInput" class="study-search-input" placeholder="🔍 Buscar por palabra clave (ej: orden, Bernoulli, Euler, factor integrante, Tacoma)...">
+        </div>
+
+        <div class="study-filters-bar" id="studyFiltersBar">
+          <button class="study-filter-btn active" data-filter="todas">🌟 Todas las Respuestas (32)</button>
+          <button class="study-filter-btn" data-filter="Conceptos Básicos">📘 Conceptos Básicos</button>
+          <button class="study-filter-btn" data-filter="Clasificación">🏷️ Clasificación</button>
+          <button class="study-filter-btn" data-filter="Métodos">⚡ Métodos</button>
+          <button class="study-filter-btn" data-filter="Aplicaciones">🌍 Aplicaciones</button>
+          <button class="study-filter-btn" data-filter="Curiosidades">💡 Curiosidades</button>
+        </div>
+
+        <!-- CONTENEDOR DE TARJETAS DE ESTUDIO -->
+        <div class="study-cards-grid" id="studyCardsContainer">
+          <!-- Renderizado dinámicamente con las preguntas, respuestas en verde, explicaciones y tips -->
+        </div>
+      </section>

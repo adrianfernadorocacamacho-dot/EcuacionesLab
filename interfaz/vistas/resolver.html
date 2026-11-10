@@ -1,0 +1,115 @@
+      <section class="view" id="view-resolver">
+        <div class="page-intro">
+          <div class="eyebrow">MÓDULO 02 · RESOLUTOR ANALÍTICO PASO A PASO</div>
+          <h1>Calculadora de Ecuaciones Diferenciales Paso a Paso</h1>
+          <p>Aprende cómo se resuelve cada ecuación diferencial paso a paso: identificación de variables, método de solución, integración detallada, despeje de constantes y gráfica de la solución.</p>
+        </div>
+
+        <div class="solver-layout">
+          <!-- PANEL IZQUIERDO: CONTROLES -->
+          <div class="panel solver-controls">
+            <div class="panel-header-clean">
+              <span class="feature-icon blue">⚡</span>
+              <div>
+                <h3 style="margin: 0; font-size: 16px;">Configurar Ecuación</h3>
+                <small style="color: #94a3b8; font-size: 11px;">Elige un modelo guiado o escribe tu propia ecuación libre</small>
+              </div>
+            </div>
+
+            <div class="solver-mode-selector">
+              <button type="button" class="mode-btn active" id="btnModePreset">Modelos Guiados</button>
+              <button type="button" class="mode-btn" id="btnModeCustom">Entrada Libre</button>
+            </div>
+
+            <!-- CONTROLES MODO PRESET -->
+            <div id="presetControlsArea">
+              <label for="solverType">Tipo de Ecuación Diferencial:</label>
+              <select id="solverType">
+                <option value="exp">Crecimiento / Decaimiento (y' = k·y)</option>
+                <option value="cooling">Enfriamiento de Newton (y' = -k·(y - Ta))</option>
+                <option value="linear">Lineal de 1er Orden (y' + a·y = b)</option>
+                <option value="harmonic">Oscilador Armónico Libre (y'' + ω²·y = 0)</option>
+                <option value="power">Potencial Simple (y' = a·x^n)</option>
+              </select>
+
+              <div class="input-row" id="paramsRow1" style="margin-top: 12px;">
+                <div>
+                  <label id="labelParamA" for="paramA">Tasa k</label>
+                  <input type="number" id="paramA" value="2" step="0.5">
+                </div>
+                <div id="paramSecondCol" style="display: none;">
+                  <label id="labelParamB" for="paramB">Parámetro b</label>
+                  <input type="number" id="paramB" value="4" step="0.5">
+                </div>
+              </div>
+            </div>
+
+            <!-- CONTROLES MODO CUSTOM (ENTRADA LIBRE) -->
+            <div id="customControlsArea" style="display: none;">
+              <label for="customEquationInput">Escribe tu ecuación diferencial:</label>
+              <input type="text" id="customEquationInput" placeholder="Ej: y' + 2*y = 4, y' = 3*y, y'' + 9*y = 0" value="y' + 2*y = 4">
+              
+              <div class="input-examples">
+                <span style="font-weight: 600;">Ejemplos rápidos:</span>
+                <button type="button" class="example-chip" data-eq="y' = 3*y">y' = 3y</button>
+                <button type="button" class="example-chip" data-eq="y' + 2*y = 4">y' + 2y = 4</button>
+                <button type="button" class="example-chip" data-eq="y'' + 9*y = 0">y'' + 9y = 0</button>
+                <button type="button" class="example-chip" data-eq="y' = -0.5*(y - 20)">Newton</button>
+                <button type="button" class="example-chip" data-eq="y' = 2*x**2">y' = 2x²</button>
+              </div>
+              <small style="display: block; margin-top: 8px; color: #94a3b8; font-size: 11px;">Sintaxis: usa <code>y'</code> para dy/dx, <code>y''</code> para d²y/dx², <code>*</code> para multiplicar y <code>**</code> para potencias.</small>
+            </div>
+
+            <!-- SECCIÓN CONDICIONES INICIALES -->
+            <div class="ics-section">
+              <label style="font-weight: 700; color: #c4b5fd; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Condición Inicial (Problema de Valor Inicial):</label>
+              <div class="input-row">
+                <div>
+                  <label for="initialX0">Punto x₀</label>
+                  <input type="number" id="initialX0" value="0" step="0.5">
+                </div>
+                <div>
+                  <label for="initialY0">Valor y(x₀)</label>
+                  <input type="number" id="initialY0" value="1" step="0.5">
+                </div>
+              </div>
+              <div id="secondOrderCond" style="display: none; margin-top: 10px;">
+                <label id="labelInitialY1" for="initialY1">Derivada y'(x₀)</label>
+                <input type="number" id="initialY1" value="0" step="0.5">
+              </div>
+            </div>
+
+            <button type="button" class="primary-button full" id="solveButton" style="margin-top: 18px;">
+              <span>⚡</span> Resolver Paso a Paso
+            </button>
+
+            <div class="small-note" id="solverEngineNote" style="margin-top: 14px;">
+              ✦ Modo didáctico: Explicación pedagógica detallada paso a paso.
+            </div>
+          </div>
+
+          <!-- PANEL DERECHO: PROCEDIMIENTO PASO A PASO Y RESULTADOS -->
+          <div class="panel solution-panel">
+            <h3 id="solutionTitle" style="margin-top: 0;">Procedimiento y Solución Paso a Paso</h3>
+            
+            <div class="equation-display-box" id="latexEquation"></div>
+
+            <div class="solution-steps" id="solutionSteps">
+              <!-- Pasos generados analíticamente -->
+            </div>
+
+            <div class="answer-box">
+              <span>SOLUCIÓN FINAL (ANALÍTICA)</span>
+              <strong id="solutionAnswer"></strong>
+            </div>
+
+            <div class="solution-mini-chart">
+              <div class="mini-chart-header">
+                <span>Curva de Solución Evaluada</span>
+                <span class="badge-chip">Intervalo [x₀, x₀ + 5]</span>
+              </div>
+              <canvas id="miniSolverCanvas" height="130"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
