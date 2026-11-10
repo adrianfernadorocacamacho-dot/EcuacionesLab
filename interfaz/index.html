@@ -22,28 +22,12 @@
       <div class="side-label">MENÚ EDUCATIVO</div>
       <nav class="nav-menu" aria-label="Navegación principal">
         <button class="nav-link active" data-view="inicio" id="nav-inicio"><span>⌂</span> Inicio</button>
+        <button class="nav-link" data-view="resolver" id="nav-resolver"><span class="glow-icon">⚡</span> Calculadora</button>
         <button class="nav-link" data-view="aprender" id="nav-aprender"><span class="glow-icon">✦</span> Aprende & Curiosidades</button>
         <button class="nav-link" data-view="practicar" id="nav-practicar"><span>◈</span> Trivia & Juego</button>
         <button class="nav-link" data-view="aplicaciones" id="nav-aplicaciones"><span>◉</span> Aplicaciones</button>
         <button class="nav-link" data-view="formularios" id="nav-formularios"><span>📑</span> Formularios</button>
       </nav>
-      <div class="sidebar-bottom">
-        <div class="side-tip" id="dailyTip">
-          <span class="tip-icon">💡</span>
-          <div>
-            <strong>¿Sabías que?</strong>
-            <p id="sideTipText">Las ecuaciones diferenciales modelan desde el enfriamiento de tu café hasta la física de los videojuegos.</p>
-          </div>
-        </div>
-        <div class="profile">
-          <div class="avatar">DL</div>
-          <div>
-            <strong>Estudiante Activo</strong>
-            <small id="userStatsMini">Nivel 1 · 0 pts</small>
-          </div>
-          <span class="status-dot" id="sidebarDot" title="Conexión activa"></span>
-        </div>
-      </div>
     </aside>
 
     <!-- CONTENIDO PRINCIPAL -->
@@ -55,13 +39,13 @@
           Aula Virtual <span>/</span> <strong id="crumb">Inicio</strong>
         </div>
         <div class="top-actions">
+          <button class="topbar-btn-pill" data-go="resolver" title="Calculadora Paso a Paso"><span>⚡</span> Calculadora</button>
           <button class="topbar-btn-pill" data-go="formularios" title="Ver Formularios para Imprimir"><span>🖨️</span> Formularios</button>
           <div class="backend-pill" id="backendPill" title="Estado de la conexión">
             <span class="live-dot" id="liveDot"></span>
             <span id="backendStatusText">Detectando Python...</span>
           </div>
           <button class="icon-button" id="soundToggle" title="Activar/Desactivar Sonido" aria-label="Alternar sonido">🔊</button>
-          <button class="icon-button" id="themeToggle" title="Cambiar contraste (Modo Claro/Oscuro)" aria-label="Cambiar tema">◐</button>
         </div>
       </header>
 
@@ -71,9 +55,10 @@
           <div class="hero-copy">
             <div class="eyebrow"><span class="spark">✦</span> DIFERENCIALLAB · VERSIÓN 2.0</div>
             <h1>Las matemáticas<br>cobran <span>vida real.</span></h1>
-            <p>Descubre el mundo de las <strong>ecuaciones diferenciales</strong> de forma didáctica: aprende fundamentos teóricos, descubre historias y anécdotas insólitas tirando el dado interactivo y pon a prueba tus conocimientos en la Trivia.</p>
+            <p>Descubre el mundo de las <strong>ecuaciones diferenciales</strong> de forma didáctica: resuelve paso a paso con explicaciones claras, aprende fundamentos teóricos, descubre anécdotas insólitas y pon a prueba tus conocimientos en la Trivia.</p>
             <div class="hero-actions">
-              <button class="primary-button" data-go="practicar">¡Jugar la Trivia! <span>🎮</span></button>
+              <button class="primary-button" data-go="resolver">Calculadora <span>⚡</span></button>
+              <button class="secondary-button" data-go="practicar">¡Jugar la Trivia! <span>🎮</span></button>
               <button class="secondary-button" data-go="aprender">Aprende & Curiosidades <span>✦</span></button>
               <button class="secondary-button" data-go="formularios">Formularios <span>📑</span></button>
             </div>
@@ -129,9 +114,17 @@
         </div>
 
         <div class="feature-grid">
-          <button class="feature-card highlight-card" data-go="aprender">
+          <button class="feature-card highlight-card" data-go="resolver">
+            <span class="feature-icon blue">⚡</span>
+            <span class="card-kicker">01 · RESOLUTOR PASO A PASO</span>
+            <strong>Calculadora</strong>
+            <p>Resuelve analíticamente cualquier EDO con procedimiento detallado paso a paso para estudiantes, PVI y gráfica.</p>
+            <span class="card-arrow">Calcular ahora ↗</span>
+          </button>
+
+          <button class="feature-card" data-go="aprender">
             <span class="feature-icon yellow">✦</span>
-            <span class="card-kicker">01 · FUNDAMENTOS & HISTORIA</span>
+            <span class="card-kicker">02 · FUNDAMENTOS & HISTORIA</span>
             <strong>Aprende & Curiosidades</strong>
             <p>Bases teóricas, métodos de solución, anécdotas insólitas con el dado interactivo y banco de estudio.</p>
             <span class="card-arrow">Comenzar a aprender ↗</span>
@@ -139,7 +132,7 @@
 
           <button class="feature-card special-card" data-go="practicar">
             <span class="feature-icon orange">◈</span>
-            <span class="card-kicker">02 · JUEGO & AUTOEVALUACIÓN</span>
+            <span class="card-kicker">03 · JUEGO & AUTOEVALUACIÓN</span>
             <strong>Trivia de Preguntas</strong>
             <p>Modo Desafío Contrarreloj, Modo Supervivencia con 3 vidas, racha de combos y medallas desbloqueables.</p>
             <span class="card-arrow">¡Jugar ahora! ↗</span>
@@ -147,7 +140,7 @@
 
           <button class="feature-card" data-go="aplicaciones">
             <span class="feature-icon green">◉</span>
-            <span class="card-kicker">03 · MUNDO REAL</span>
+            <span class="card-kicker">04 · MUNDO REAL</span>
             <strong>Aplicaciones Prácticas</strong>
             <p>Descubre el impacto real en medicina forense, termodinámica, ecología, ingeniería y videojuegos.</p>
             <span class="card-arrow">Ver modelos ↗</span>
@@ -155,7 +148,7 @@
 
           <button class="feature-card highlight-card-blue" data-go="formularios">
             <span class="feature-icon purple">📑</span>
-            <span class="card-kicker">04 · TABLAS & FÓRMULAS</span>
+            <span class="card-kicker">05 · TABLAS & FÓRMULAS</span>
             <strong>Formularios Oficiales</strong>
             <p>Tablas completas de Derivadas (32) e Integrales (53) con visor HD interactivo y búsqueda matemática.</p>
             <span class="card-arrow">Consultar tablas ↗</span>
@@ -199,7 +192,124 @@
         </div>
       </section>
 
-      <!-- VISTA 2: APRENDE & CURIOSIDADES (MÓDULO DIDÁCTICO UNIFICADO) -->
+      <!-- VISTA 2: CALCULADORA Y RESOLUTOR PASO A PASO -->
+      <section class="view" id="view-resolver">
+        <div class="page-intro">
+          <div class="eyebrow">MÓDULO 02 · RESOLUTOR ANALÍTICO PASO A PASO</div>
+          <h1>Calculadora de Ecuaciones Diferenciales Paso a Paso</h1>
+          <p>Aprende cómo se resuelve cada ecuación diferencial paso a paso: identificación de variables, método de solución, integración detallada, despeje de constantes y gráfica de la solución.</p>
+        </div>
+
+        <div class="solver-layout">
+          <!-- PANEL IZQUIERDO: CONTROLES -->
+          <div class="panel solver-controls">
+            <div class="panel-header-clean">
+              <span class="feature-icon blue">⚡</span>
+              <div>
+                <h3 style="margin: 0; font-size: 16px;">Configurar Ecuación</h3>
+                <small style="color: #94a3b8; font-size: 11px;">Elige un modelo guiado o escribe tu propia ecuación libre</small>
+              </div>
+            </div>
+
+            <div class="solver-mode-selector">
+              <button type="button" class="mode-btn active" id="btnModePreset">Modelos Guiados</button>
+              <button type="button" class="mode-btn" id="btnModeCustom">Entrada Libre</button>
+            </div>
+
+            <!-- CONTROLES MODO PRESET -->
+            <div id="presetControlsArea">
+              <label for="solverType">Tipo de Ecuación Diferencial:</label>
+              <select id="solverType">
+                <option value="exp">Crecimiento / Decaimiento (y' = k·y)</option>
+                <option value="cooling">Enfriamiento de Newton (y' = -k·(y - Ta))</option>
+                <option value="linear">Lineal de 1er Orden (y' + a·y = b)</option>
+                <option value="harmonic">Oscilador Armónico Libre (y'' + ω²·y = 0)</option>
+                <option value="power">Potencial Simple (y' = a·x^n)</option>
+              </select>
+
+              <div class="input-row" id="paramsRow1" style="margin-top: 12px;">
+                <div>
+                  <label id="labelParamA" for="paramA">Tasa k</label>
+                  <input type="number" id="paramA" value="2" step="0.5">
+                </div>
+                <div id="paramSecondCol" style="display: none;">
+                  <label id="labelParamB" for="paramB">Parámetro b</label>
+                  <input type="number" id="paramB" value="4" step="0.5">
+                </div>
+              </div>
+            </div>
+
+            <!-- CONTROLES MODO CUSTOM (ENTRADA LIBRE) -->
+            <div id="customControlsArea" style="display: none;">
+              <label for="customEquationInput">Escribe tu ecuación diferencial:</label>
+              <input type="text" id="customEquationInput" placeholder="Ej: y' + 2*y = 4, y' = 3*y, y'' + 9*y = 0" value="y' + 2*y = 4">
+              
+              <div class="input-examples">
+                <span style="font-weight: 600;">Ejemplos rápidos:</span>
+                <button type="button" class="example-chip" data-eq="y' = 3*y">y' = 3y</button>
+                <button type="button" class="example-chip" data-eq="y' + 2*y = 4">y' + 2y = 4</button>
+                <button type="button" class="example-chip" data-eq="y'' + 9*y = 0">y'' + 9y = 0</button>
+                <button type="button" class="example-chip" data-eq="y' = -0.5*(y - 20)">Newton</button>
+                <button type="button" class="example-chip" data-eq="y' = 2*x**2">y' = 2x²</button>
+              </div>
+              <small style="display: block; margin-top: 8px; color: #94a3b8; font-size: 11px;">Sintaxis: usa <code>y'</code> para dy/dx, <code>y''</code> para d²y/dx², <code>*</code> para multiplicar y <code>**</code> para potencias.</small>
+            </div>
+
+            <!-- SECCIÓN CONDICIONES INICIALES -->
+            <div class="ics-section">
+              <label style="font-weight: 700; color: #c4b5fd; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Condición Inicial (Problema de Valor Inicial):</label>
+              <div class="input-row">
+                <div>
+                  <label for="initialX0">Punto x₀</label>
+                  <input type="number" id="initialX0" value="0" step="0.5">
+                </div>
+                <div>
+                  <label for="initialY0">Valor y(x₀)</label>
+                  <input type="number" id="initialY0" value="1" step="0.5">
+                </div>
+              </div>
+              <div id="secondOrderCond" style="display: none; margin-top: 10px;">
+                <label id="labelInitialY1" for="initialY1">Derivada y'(x₀)</label>
+                <input type="number" id="initialY1" value="0" step="0.5">
+              </div>
+            </div>
+
+            <button type="button" class="primary-button full" id="solveButton" style="margin-top: 18px;">
+              <span>⚡</span> Resolver Paso a Paso
+            </button>
+
+            <div class="small-note" id="solverEngineNote" style="margin-top: 14px;">
+              ✦ Modo didáctico: Explicación pedagógica detallada paso a paso.
+            </div>
+          </div>
+
+          <!-- PANEL DERECHO: PROCEDIMIENTO PASO A PASO Y RESULTADOS -->
+          <div class="panel solution-panel">
+            <h3 id="solutionTitle" style="margin-top: 0;">Procedimiento y Solución Paso a Paso</h3>
+            
+            <div class="equation-display-box" id="latexEquation"></div>
+
+            <div class="solution-steps" id="solutionSteps">
+              <!-- Pasos generados analíticamente -->
+            </div>
+
+            <div class="answer-box">
+              <span>SOLUCIÓN FINAL (ANALÍTICA)</span>
+              <strong id="solutionAnswer"></strong>
+            </div>
+
+            <div class="solution-mini-chart">
+              <div class="mini-chart-header">
+                <span>Curva de Solución Evaluada</span>
+                <span class="badge-chip">Intervalo [x₀, x₀ + 5]</span>
+              </div>
+              <canvas id="miniSolverCanvas" height="130"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VISTA 3: APRENDE & CURIOSIDADES (MÓDULO DIDÁCTICO UNIFICADO) -->
       <section class="view" id="view-aprender">
         <div class="page-intro">
           <div class="eyebrow">MÓDULO 01 · GUÍA DIDÁCTICA, TEORÍA & HISTORIA</div>
@@ -605,17 +715,11 @@
           </div>
         </div>
       </section>
-
-      <!-- PIE DE PÁGINA -->
-      <footer class="footer">
-        <span>∑ DiferencialLab v2.0</span>
-        <span>Aprende · Descubre · Juega · Aplica</span>
-        <span>Plataforma Didáctica de Ecuaciones Diferenciales</span>
-      </footer>
     </main>
   </div>
 
-  <!-- SCRIPT PRINCIPAL -->
-  <script src="script.js"></script>
+  <!-- ARQUITECTURA MODULAR DDD (LÓGICA E INTERFAZ) -->
+  <script type="module" src="main.js"></script>
+  <script nomodule src="script.js"></script>
 </body>
 </html>

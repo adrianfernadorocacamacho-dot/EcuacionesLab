@@ -10,9 +10,10 @@
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 
-const views = ["inicio", "aprender", "curiosidades", "practicar", "aplicaciones", "formularios"];
+const views = ["inicio", "resolver", "aprender", "curiosidades", "practicar", "aplicaciones", "formularios"];
 const labels = {
   inicio: "Inicio",
+  resolver: "Calculadora Paso a Paso",
   aprender: "Aprende & Curiosidades",
   curiosidades: "Aprende & Curiosidades",
   practicar: "Trivia & Juego",
@@ -125,7 +126,7 @@ $("#soundToggle").addEventListener("click", () => sfx.toggle());
 // 3. NAVEGACIÓN Y ENRUTAMIENTO DE VISTAS
 // ==============================================================================
 function go(view) {
-  if (view === "curiosidades" || view === "resolver" || view === "visualizar") {
+  if (view === "curiosidades" || view === "visualizar") {
     view = "aprender";
   }
   if (!views.includes(view)) return;
@@ -138,6 +139,9 @@ function go(view) {
   if (view === "aprender") {
     renderStudyAnswers();
     renderCuriosities();
+  }
+  if (view === "resolver") {
+    solveEquation();
   }
   if (view === "formularios") {
     initFormulariosView();
@@ -153,24 +157,18 @@ $$("[data-view]").forEach(b => b.addEventListener("click", (e) => {
 $$("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
 $("#mobileMenu").addEventListener("click", () => $("#sidebar").classList.toggle("open"));
 
-// Modo Claro / Oscuro
-const savedTheme = localStorage.getItem("dl_theme");
-if (savedTheme === "light") document.body.classList.add("light-mode");
-
-$("#themeToggle").addEventListener("click", () => {
-  document.body.classList.toggle("light-mode");
-  const isLight = document.body.classList.contains("light-mode");
-  localStorage.setItem("dl_theme", isLight ? "light" : "dark");
-  sfx.click();
-  if ($("#view-visualizar").classList.contains("active")) drawActiveSimulation();
-});
+// Modo Oscuro Permanente (sin opción de cambio a claro)
+try {
+  localStorage.removeItem("dl_theme");
+  document.body.classList.remove("light-mode");
+} catch (e) {}
 
 // Renderizado con KaTeX seguro
-function renderMath(targetEl, latexString) {
+function renderMath(targetEl, latexString, displayMode = false) {
   if (!targetEl) return;
   if (window.katex) {
     try {
-      window.katex.render(latexString, targetEl, { throwOnError: false, displayMode: false });
+      window.katex.render(latexString, targetEl, { throwOnError: false, displayMode: displayMode });
       return;
     } catch (e) {}
   }
@@ -189,9 +187,9 @@ async function checkPythonBackend() {
       const data = await res.json();
       isPythonConnected = true;
       pill.className = "backend-pill online";
-      text.textContent = `Python SymPy v${data.sympy_version}`;
-      pill.title = `Conectado al servidor Python ${data.python_version} con SymPy ${data.sympy_version}`;
-      $("#solverEngineNote").textContent = `⚡ Motor Activo: SymPy v${data.sympy_version} ejecutándose en Python local.`;
+      text.textContent = "Servidor Activo";
+      pill.title = `Conectado al servidor Python local`;
+      $("#solverEngineNote").textContent = "✦ Modo didáctico: Explicación pedagógica detallada paso a paso.";
       return true;
     }
   } catch (e) {
@@ -199,9 +197,9 @@ async function checkPythonBackend() {
   }
   isPythonConnected = false;
   pill.className = "backend-pill offline";
-  text.textContent = "Modo Navegador Offline";
-  pill.title = "Ejecutando con motor JavaScript local. Inicia app.py para usar SymPy completo.";
-  $("#solverEngineNote").textContent = "💡 Modo Navegador: Resuelve familias clave. Inicia app.py para el motor simbólico universal de SymPy.";
+  text.textContent = "Modo Navegador";
+  pill.title = "Ejecutando con motor JavaScript local.";
+  $("#solverEngineNote").textContent = "✦ Modo didáctico: Resuelve paso a paso con explicaciones claras.";
   return false;
 }
 
@@ -561,11 +559,14 @@ async function solveEquation() {
         y1: y1
       };
       if (solverMode === "custom") {
-        payload.equation = $("#customEquationInput").value;
+        payload.type = "custom";
+        payload.equation = ($("#customEquationInput")?.value || "").trim();
+        if (!payload.equation) return;
       } else {
         const val = $("#solverType").value;
         const a = Number($("#paramA").value) || 2;
         const b = Number($("#paramB").value) || 4;
+        payload.type = val;
         payload.model = val;
         payload.k = a;
         payload.a = a;
@@ -585,6 +586,15 @@ async function solveEquation() {
         const data = await res.json();
         renderSolverResult(data);
         return;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        if (solverMode === "custom") {
+          renderSolverError(
+            errData.error || "No se pudo resolver la ecuación",
+            errData.detalles || "Verifica la sintaxis (ejemplo: y' = 3*y, y' + 2*y = 4, y'' + 9*y = 0)"
+          );
+          return;
+        }
       }
     } catch (e) {
       // Fallback a motor cliente
@@ -595,26 +605,87 @@ async function solveEquation() {
   solveClientFallback(x0, y0, y1);
 }
 
-function renderSolverResult(data) {
-  $("#solutionTitle").textContent = `Ecuación resuelta: ${data.equation_input || ""}`;
-  renderMath($("#latexEquation"), data.latex_eq || data.equation_input || "y' = f(x, y)");
-
-  const stepsContainer = $("#solutionSteps");
-  stepsContainer.innerHTML = (data.steps || []).map(s => `
-    <div class="step">
-      <span class="step-num">${s.num}</span>
+function renderSolverError(msg, details) {
+  $("#solutionTitle").textContent = "Error de Sintaxis / Resolución";
+  $("#latexEquation").textContent = $("#customEquationInput")?.value || "y' = f(x, y)";
+  $("#solutionSteps").innerHTML = `
+    <div class="step" style="border-left-color: #ef4444;">
+      <span class="step-num" style="background: rgba(239, 68, 68, 0.3); color: #f87171;">⚠️</span>
       <div>
-        <strong>${s.titulo}</strong>
-        <p>${s.descripcion}</p>
+        <strong style="color: #f87171;">${msg}</strong>
+        <p style="color: #fca5a5; font-size: 11.5px; margin-top: 4px;">${details}</p>
       </div>
     </div>
-  `).join("");
+  `;
+  $("#solutionAnswer").textContent = "No disponible";
+  const canvas = $("#miniSolverCanvas");
+  if (canvas) {
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+function renderSolverResult(data) {
+  $("#solutionTitle").textContent = `Ecuación resuelta: ${data.equation_input || ""}`;
+  renderMath($("#latexEquation"), data.latex_eq || data.equation_input || "y' = f(x, y)", true);
+
+  const stepsContainer = $("#solutionSteps");
+  stepsContainer.innerHTML = "";
+  (data.steps || []).forEach(s => {
+    const stepDiv = document.createElement("div");
+    stepDiv.className = "step";
+    
+    const numSpan = document.createElement("span");
+    numSpan.className = "step-num";
+    numSpan.textContent = s.num;
+    
+    const bodyDiv = document.createElement("div");
+    bodyDiv.style.flex = "1";
+    
+    const titleStrong = document.createElement("strong");
+    titleStrong.textContent = s.titulo;
+    bodyDiv.appendChild(titleStrong);
+    
+    const desc = s.descripcion || "";
+    if (desc.includes("\n\n")) {
+      const parts = desc.split("\n\n");
+      const introP = document.createElement("p");
+      introP.textContent = parts[0];
+      bodyDiv.appendChild(introP);
+      
+      const mathBox = document.createElement("div");
+      mathBox.className = "step-math-box";
+      renderMath(mathBox, parts.slice(1).join("\n\n"), true);
+      bodyDiv.appendChild(mathBox);
+    } else if (desc.includes(": ") && (desc.includes("\\") || desc.includes("y{"))) {
+      const idx = desc.indexOf(": ");
+      const intro = desc.substring(0, idx + 1);
+      const math = desc.substring(idx + 2);
+      
+      const introP = document.createElement("p");
+      introP.textContent = intro;
+      bodyDiv.appendChild(introP);
+      
+      const mathBox = document.createElement("div");
+      mathBox.className = "step-math-box";
+      renderMath(mathBox, math, true);
+      bodyDiv.appendChild(mathBox);
+    } else {
+      const introP = document.createElement("p");
+      introP.textContent = desc;
+      bodyDiv.appendChild(introP);
+    }
+    
+    stepDiv.appendChild(numSpan);
+    stepDiv.appendChild(bodyDiv);
+    stepsContainer.appendChild(stepDiv);
+  });
 
   const solTarget = $("#solutionAnswer");
   if (data.latex_particular) {
-    renderMath(solTarget, data.latex_particular);
+    renderMath(solTarget, data.latex_particular, true);
   } else if (data.latex_general) {
-    renderMath(solTarget, data.latex_general);
+    renderMath(solTarget, data.latex_general, true);
   } else {
     solTarget.textContent = data.str_particular || data.str_general || "Solución encontrada";
   }
@@ -634,26 +705,34 @@ function solveClientFallback(x0, y0, y1) {
   if (type === "exp") {
     title = "Crecimiento / Decaimiento Exponencial";
     eqLatex = `\\frac{dy}{dx} = ${a}y`;
-    steps = [
-      { num: 1, titulo: "Separar variables", descripcion: `\\frac{dy}{y} = ${a}\\,dx` },
-      { num: 2, titulo: "Integrar ambos miembros", descripcion: `\\ln|y| = ${a}x + C_1 \\implies y(x) = C\\,e^{${a}x}` },
-      { num: 3, titulo: "Aplicar condición inicial", descripcion: `y(${x0}) = ${y0} \\implies C = ${y0 / Math.exp(a * x0)}` }
-    ];
     const C = Number((y0 / Math.exp(a * x0)).toFixed(3));
     answerLatex = `y(x) = ${C}\\,e^{${a}x}`;
+    steps = [
+      { num: 1, titulo: "Identificación de Variables y Forma Estándar", descripcion: `Ecuación diferencial de variables separables:\n\n\\frac{dy}{dx} = ${a}y` },
+      { num: 2, titulo: "Clasificación de la Ecuación", descripcion: "Ecuación Diferencial Ordinaria (EDO) de 1er Orden homogénea lineal." },
+      { num: 3, titulo: "Separación de Variables", descripcion: `Dividimos entre y y multiplicamos por dx para aislar variables:\n\n\\frac{dy}{y} = ${a}\\,dx` },
+      { num: 4, titulo: "Integración de Ambos Miembros", descripcion: `Integramos ambos lados de la igualdad:\n\n\\int \\frac{dy}{y} = \\int ${a}\\,dx \\implies \\ln|y| = ${a}x + c` },
+      { num: 5, titulo: "Despeje Exponencial y Solución General", descripcion: `Aplicamos la función exponencial e^(·) y renombramos e^c como C:\n\ny(x) = C\\,e^{${a}x}` },
+      { num: 6, titulo: "Aplicación del Problema de Valor Inicial (PVI)", descripcion: `Sustituimos la condición inicial y(${x0}) = ${y0}:\n\n${y0} = C\\,e^{${a}(${x0})} \\implies C = ${C}` },
+      { num: 7, titulo: "Solución Particular Única", descripcion: `Reemplazando el valor de la constante hallada:\n\n${answerLatex}` }
+    ];
     for (let x = 0; x <= 5; x += 0.05) {
       points.push({ x: Number(x.toFixed(2)), y: C * Math.exp(a * x) });
     }
   } else if (type === "cooling") {
     title = "Ley de Enfriamiento de Newton";
     eqLatex = `\\frac{dy}{dx} = -${a}(y - ${b})`;
-    steps = [
-      { num: 1, titulo: "Separar e integrar", descripcion: `\\frac{dy}{y - ${b}} = -${a}\\,dx \\implies \\ln|y - ${b}| = -${a}x + C` },
-      { num: 2, titulo: "Despejar temperatura", descripcion: `y(x) = ${b} + C\\,e^{-${a}x}` },
-      { num: 3, titulo: "Evaluar condición inicial", descripcion: `y(0) = ${y0} \\implies C = ${y0 - b}` }
-    ];
     const C = y0 - b;
     answerLatex = `y(x) = ${b} + (${C})\\,e^{-${a}x}`;
+    steps = [
+      { num: 1, titulo: "Identificación del Modelo Térmico", descripcion: `La tasa de cambio de temperatura es proporcional a la diferencia con el ambiente (Ta = ${b}°C):\n\n\\frac{dy}{dx} = -${a}(y - ${b})` },
+      { num: 2, titulo: "Clasificación de la Ecuación", descripcion: "EDO de 1er Orden separable con asíntota horizontal hacia la temperatura ambiente." },
+      { num: 3, titulo: "Separación de Variables", descripcion: `Dividimos entre (y - ${b}) y multiplicamos por dx:\n\n\\frac{dy}{y - ${b}} = -${a}\\,dx` },
+      { num: 4, titulo: "Integración Indefinida", descripcion: `Integramos ambos miembros:\n\n\\int \\frac{dy}{y - ${b}} = \\int -${a}\\,dx \\implies \\ln|y - ${b}| = -${a}x + c` },
+      { num: 5, titulo: "Solución General de la Temperatura", descripcion: `Despejamos la función y(x) aplicando exponenciales:\n\ny(x) = ${b} + C\\,e^{-${a}x}` },
+      { num: 6, titulo: "Aplicación de la Condición Inicial", descripcion: `Evaluamos para y(0) = ${y0}°C para hallar la constante C:\n\n${y0} = ${b} + C \\implies C = ${C}` },
+      { num: 7, titulo: "Solución Particular de Enfriamiento", descripcion: `Función exacta de la temperatura en el tiempo:\n\n${answerLatex}` }
+    ];
     for (let x = 0; x <= 5; x += 0.05) {
       points.push({ x: Number(x.toFixed(2)), y: b + C * Math.exp(-a * x) });
     }
@@ -661,13 +740,17 @@ function solveClientFallback(x0, y0, y1) {
     title = "Ecuación Lineal de 1er Orden";
     eqLatex = `y' + ${a}y = ${b}`;
     const yp = a !== 0 ? b / a : 0;
-    steps = [
-      { num: 1, titulo: "Factor integrante", descripcion: `\\mu(x) = e^{\\int ${a} dx} = e^{${a}x}` },
-      { num: 2, titulo: "Integrar producto", descripcion: `\\frac{d}{dx}[y \\cdot e^{${a}x}] = ${b}e^{${a}x} \\implies y\\cdot e^{${a}x} = \\frac{${b}}{${a}}e^{${a}x} + C` },
-      { num: 3, titulo: "Solución particular", descripcion: `y(x) = ${yp} + C\\,e^{-${a}x}` }
-    ];
     const C = y0 - yp;
     answerLatex = `y(x) = ${yp} + (${C})\\,e^{-${a}x}`;
+    steps = [
+      { num: 1, titulo: "Identificación de la Forma Canónica", descripcion: `Ecuación lineal estándar y' + P(x)y = Q(x) con P(x) = ${a} y Q(x) = ${b}:\n\n\\frac{dy}{dx} + ${a}y = ${b}` },
+      { num: 2, titulo: "Cálculo del Factor Integrante μ(x)", descripcion: `Calculamos el factor integrante μ(x) = e^(∫ ${a} dx):\n\n\\mu(x) = e^{${a}x}` },
+      { num: 3, titulo: "Multiplicación y Derivada del Producto", descripcion: `Multiplicamos por μ(x) reconociendo la derivada del producto d/dx[μ·y]:\n\n\\frac{d}{dx}\\left[y \\cdot e^{${a}x}\\right] = ${b}e^{${a}x}` },
+      { num: 4, titulo: "Integración de Ambos Lados", descripcion: `Integramos con respecto a x:\n\ny \\cdot e^{${a}x} = \\frac{${b}}{${a}}e^{${a}x} + C` },
+      { num: 5, titulo: "Solución General", descripcion: `Dividimos entre el factor integrante e^(${a}x):\n\ny(x) = ${yp} + C\\,e^{-${a}x}` },
+      { num: 6, titulo: "Evaluación de la Condición Inicial", descripcion: `Sustituyendo y(0) = ${y0}:\n\n${y0} = ${yp} + C \\implies C = ${C}` },
+      { num: 7, titulo: "Solución Particular Única", descripcion: `Reemplazando el valor de la constante:\n\n${answerLatex}` }
+    ];
     for (let x = 0; x <= 5; x += 0.05) {
       points.push({ x: Number(x.toFixed(2)), y: yp + C * Math.exp(-a * x) });
     }
@@ -675,12 +758,15 @@ function solveClientFallback(x0, y0, y1) {
     title = "Oscilador Armónico Libre (2º Orden)";
     eqLatex = `y'' + ${a}y = 0`;
     const w = Math.sqrt(Math.max(0.1, a));
-    steps = [
-      { num: 1, titulo: "Ecuación característica", descripcion: `r^2 + ${a} = 0 \\implies r = \\pm ${w.toFixed(2)}i` },
-      { num: 2, titulo: "Solución general trigonométrica", descripcion: `y(x) = C_1\\cos(${w.toFixed(2)}x) + C_2\\sin(${w.toFixed(2)}x)` },
-      { num: 3, titulo: "Condiciones iniciales", descripcion: `y(0) = ${y0}, y'(0) = ${y1} \\implies C_1 = ${y0}, C_2 = ${(y1/w).toFixed(2)}` }
-    ];
     answerLatex = `y(x) = ${y0}\\cos(${w.toFixed(2)}x) + ${(y1/w).toFixed(2)}\\sin(${w.toFixed(2)}x)`;
+    steps = [
+      { num: 1, titulo: "Identificación del Oscilador de 2º Orden", descripcion: `EDO lineal homogénea con coeficientes constantes que modela movimiento armónico:\n\n\\frac{d^2y}{dx^2} + ${a}y = 0` },
+      { num: 2, titulo: "Planteamiento de la Ecuación Característica", descripcion: `Proponemos y = e^(rx). Sustituyendo obtenemos la ecuación cuadrática:\n\nr^2 + ${a} = 0` },
+      { num: 3, titulo: "Cálculo de Raíces Complejas Conjugadas", descripcion: `Despejando r obtenemos raíces imaginarias:\n\nr = \\pm ${w.toFixed(2)}i` },
+      { num: 4, titulo: "Aplicación de la Fórmula de Euler y Solución General", descripcion: `Las raíces imaginarias producen oscilaciones reales con senos y cosenos:\n\ny(x) = C_1\\cos(${w.toFixed(2)}x) + C_2\\sin(${w.toFixed(2)}x)` },
+      { num: 5, titulo: "Aplicación del PVI (Posición y Velocidad)", descripcion: `Evaluando y(0) = ${y0} e y'(0) = ${y1}:\n\nC_1 = ${y0}, \\quad C_2 = ${(y1/w).toFixed(2)}` },
+      { num: 6, titulo: "Solución Particular Oscilatoria", descripcion: `Trayectoria armónica exacta:\n\n${answerLatex}` }
+    ];
     for (let x = 0; x <= 5; x += 0.05) {
       points.push({ x: Number(x.toFixed(2)), y: y0 * Math.cos(w * x) + (y1 / w) * Math.sin(w * x) });
     }
@@ -688,11 +774,14 @@ function solveClientFallback(x0, y0, y1) {
     title = "Ecuación Potencial";
     const pow = Math.floor(b) + 1;
     eqLatex = `y' = ${a}x^{${Math.floor(b)}}`;
-    steps = [
-      { num: 1, titulo: "Integración directa", descripcion: `y = \\int ${a}x^{${Math.floor(b)}} dx = \\frac{${a}}{${pow}}x^{${pow}} + C` },
-      { num: 2, titulo: "Aplicar condición inicial", descripcion: `Como y(0) = ${y0}, la constante C = ${y0}` }
-    ];
     answerLatex = `y(x) = \\frac{${a}}{${pow}}x^{${pow}} + ${y0}`;
+    steps = [
+      { num: 1, titulo: "Identificación de Integración Directa", descripcion: `La derivada solo depende de una potencia de x:\n\n\\frac{dy}{dx} = ${a}x^{${Math.floor(b)}}` },
+      { num: 2, titulo: "Separación de Diferenciales", descripcion: `Multiplicamos por dx:\n\ndy = ${a}x^{${Math.floor(b)}}\\,dx` },
+      { num: 3, titulo: "Integración por Regla de la Potencia", descripcion: `Aplicamos ∫ x^n dx = x^(n+1)/(n+1):\n\ny(x) = \\int ${a}x^{${Math.floor(b)}} dx = \\frac{${a}}{${pow}}x^{${pow}} + C` },
+      { num: 4, titulo: "Evaluación de Condición Inicial", descripcion: `Evaluando y(0) = ${y0}:\n\nC = ${y0}` },
+      { num: 5, titulo: "Solución Particular", descripcion: `Resultado final:\n\n${answerLatex}` }
+    ];
     for (let x = 0; x <= 5; x += 0.05) {
       points.push({ x: Number(x.toFixed(2)), y: (a / pow) * Math.pow(x, pow) + y0 });
     }
@@ -710,9 +799,12 @@ function solveClientFallback(x0, y0, y1) {
 function drawMiniSolverChart(points) {
   const canvas = $("#miniSolverCanvas");
   if (!canvas || !points || points.length === 0) return;
+  const container = canvas.parentElement;
+  const w = container ? Math.max(200, Math.floor(container.clientWidth - 24)) : 300;
+  const h = 130;
+  canvas.width = w;
+  canvas.height = h;
   const ctx = canvas.getContext("2d");
-  const w = canvas.width = canvas.parentElement.clientWidth || 300;
-  const h = canvas.height = 130;
 
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "#09182a";
@@ -721,9 +813,11 @@ function drawMiniSolverChart(points) {
   const ys = points.map(p => p.y);
   let minY = Math.min(...ys), maxY = Math.max(...ys);
   if (minY === maxY) { minY -= 1; maxY += 1; }
+  const xs = points.map(p => p.x);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
   const pad = 18;
 
-  const X = x => pad + (x / 5.0) * (w - 2 * pad);
+  const X = x => pad + ((x - minX) / (maxX - minX || 1)) * (w - 2 * pad);
   const Y = y => h - pad - ((y - minY) / (maxY - minY)) * (h - 2 * pad);
 
   // Ejes
@@ -750,6 +844,13 @@ function drawMiniSolverChart(points) {
 $("#solveButton")?.addEventListener("click", () => {
   sfx.click();
   solveEquation();
+});
+$("#customEquationInput")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    sfx.click();
+    solveEquation();
+  }
 });
 ["paramA", "paramB", "initialX0", "initialY0", "initialY1"].forEach(id => {
   $("#" + id)?.addEventListener("input", solveEquation);
@@ -2005,6 +2106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderCuriosities();
   renderStudyAnswers();
   initFormulariosView();
+  solveEquation();
 });
 
 // ==============================================================================
