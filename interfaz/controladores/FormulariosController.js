@@ -1,18 +1,18 @@
 /**
  * INTERFAZ / CONTROLADORES - CONTROLADOR DE FORMULARIOS IMPRIMIBLES
- * Visor de láminas oficiales de Derivadas e Integrales con zoom e impresión limpia (DDD)
+ * Visor de láminas oficiales de Derivadas, Integrales y EDOs con zoom e impresión limpia (DDD)
  */
 
 export class FormulariosController {
   constructor({ formulariosRepo, audioController }) {
     this.repo = formulariosRepo;
     this.audio = audioController;
-    this.claveActual = "derivadas";
+    this.claveActual = "edo1";
     this.zoom = 1.0;
   }
 
   inicializar() {
-    // Pestañas de Derivadas / Integrales
+    // Pestañas de Formularios (EDO Pág 1, EDO Pág 2, Derivadas, Integrales)
     document.querySelectorAll(".form-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         this.cambiarTabla(btn.dataset.form);
@@ -53,8 +53,8 @@ export class FormulariosController {
       }, { passive: false });
     }
 
-    // Inicializar estado en Derivadas
-    this.cambiarTabla("derivadas");
+    // Inicializar estado en Formulario de EDOs (Página 1)
+    this.cambiarTabla("edo1");
   }
 
   cambiarTabla(clave) {
@@ -72,7 +72,7 @@ export class FormulariosController {
     // Actualizar imagen principal
     const img = document.getElementById("mainFormulaImg");
     if (img) {
-      img.src = lamina.imagen + "?v=4";
+      img.src = lamina.imagen + "?v=1";
       img.alt = lamina.titulo;
     }
 
@@ -157,4 +157,3 @@ export class FormulariosController {
     printWindow.document.close();
   }
 }
-

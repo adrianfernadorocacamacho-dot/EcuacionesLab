@@ -204,26 +204,60 @@
 
 .answer-box {
   margin-top: 16px;
-  padding: 16px;
+  padding: 16px 20px;
   border: 1px solid rgba(16, 185, 129, 0.5);
   background: rgba(16, 185, 129, 0.12);
   border-radius: 12px;
 }
 
-.answer-box span {
+.answer-box > span,
+.answer-box .answer-label {
   display: block;
-  font-size: 9.5px;
+  font-size: 10px;
   letter-spacing: 1.3px;
   color: #34d399;
   font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 
+.answer-box .answer-content,
 .answer-box strong {
   display: block;
-  font: 700 18px 'Space Grotesk', sans-serif;
+  font: 700 20px 'Space Grotesk', sans-serif;
   color: #6ee7b7;
-  margin-top: 6px;
-  overflow-wrap: anywhere;
+  margin-top: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Reglas KaTeX para solución final: flujo horizontal */
+.answer-box .katex {
+  font-size: 1.35em !important;
+  color: #6ee7b7 !important;
+  white-space: nowrap !important;
+}
+
+.answer-box .katex-display {
+  margin: 6px 0 !important;
+  display: block !important;
+  text-align: center !important;
+  overflow-x: auto !important;
+}
+
+.answer-box .katex-display > .katex {
+  display: inline-block !important;
+  text-align: center !important;
+}
+
+.answer-box .katex span {
+  display: inline !important;
+  font-size: inherit !important;
+  letter-spacing: normal !important;
+  color: inherit !important;
+  font-weight: inherit !important;
 }
 
 .solution-mini-chart {

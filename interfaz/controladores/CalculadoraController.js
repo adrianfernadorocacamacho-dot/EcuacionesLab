@@ -199,15 +199,27 @@ export class CalculadoraController {
 
         const desc = s.descripcion || "";
         if (desc.includes("\n\n")) {
-          const parts = desc.split("\n\n");
-          const introP = document.createElement("p");
-          introP.textContent = parts[0];
-          bodyDiv.appendChild(introP);
-
-          const mathBox = document.createElement("div");
-          mathBox.className = "step-math-box";
-          KatexAdapter.renderizar(mathBox, parts.slice(1).join("\n\n"), true);
-          bodyDiv.appendChild(mathBox);
+          const parts = desc.split("\n\n").map(p => p.trim()).filter(Boolean);
+          parts.forEach(part => {
+            // Distinguir bloques de fórmula LaTeX pura de bloques de texto explicativo
+            const esTextoPuro = part.includes("•") || part.startsWith("Nota") || part.startsWith("💡") || 
+                                part.startsWith("Escribimos") || part.startsWith("Separamos") || 
+                                part.startsWith("En esta") || part.startsWith("La familia") || 
+                                part.startsWith("El factor") || part.startsWith("Reemplazamos") ||
+                                part.startsWith("Sustituimos") || part.startsWith("Comprobamos");
+            const tieneSintaxisMath = part.startsWith("\\") || part.includes("=") || part.includes("\\frac") || part.includes("y{") || part.includes("y(");
+            
+            if (tieneSintaxisMath && !esTextoPuro) {
+              const mathBox = document.createElement("div");
+              mathBox.className = "step-math-box";
+              KatexAdapter.renderizar(mathBox, part, true);
+              bodyDiv.appendChild(mathBox);
+            } else {
+              const p = document.createElement("p");
+              p.textContent = part;
+              bodyDiv.appendChild(p);
+            }
+          });
         } else if (desc.includes(": ") && (desc.includes("\\") || desc.includes("y{"))) {
           const idx = desc.indexOf(": ");
           const intro = desc.substring(0, idx + 1);

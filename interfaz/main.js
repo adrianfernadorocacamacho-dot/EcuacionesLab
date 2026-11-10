@@ -64,7 +64,7 @@ const navegacionController = new NavegacionController({
   audioController,
   onCambioVista: {
     resolver: () => calculadoraController.resolver(),
-    formularios: () => formulariosController.cambiarTabla("derivadas"),
+    formularios: () => formulariosController.cambiarTabla(formulariosController.claveActual || "edo1"),
     aprender: () => {
       aprendeController.renderizarLeccion("concepto");
       aprendeController.renderizarCuriosidades();

@@ -53,11 +53,11 @@
   box-shadow: 0 12px 30px rgba(139, 92, 246, 0.6);
 }
 
-/* Selector de las 2 Tablas (Derivadas e Integrales) */
-.form-selector-tabs.form-selector-two {
+/* Selector de Tablas y Formularios */
+.form-selector-tabs {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
   margin: 22px 0 20px;
 }
 

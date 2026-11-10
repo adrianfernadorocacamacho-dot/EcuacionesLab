@@ -1,21 +1,38 @@
       <section class="view" id="view-formularios">
         <div class="page-intro">
           <div class="eyebrow">FORMULARIOS OFICIALES · DIFERENCIALLAB</div>
-          <h1>Formularios para Imprimir</h1>
-          <p>Selecciona el formulario que deseas consultar e imprimir en alta resolución: <strong>Tabla de Derivadas</strong> o <strong>Tabla de Integrales</strong>.</p>
+          <h1>Formularios para Imprimir y Consultar</h1>
+          <p>Selecciona el formulario que deseas consultar e imprimir en alta resolución: <strong>Guía Oficial de Ecuaciones Diferenciales</strong>, <strong>Tabla de Derivadas</strong> o <strong>Tabla de Integrales</strong>.</p>
           <div class="intro-actions-bar">
             <button class="primary-button print-main-btn" id="btnPrintSheet">
-              <span>🖨️ Imprimir Formulario</span>
+              <span>🖨️ Imprimir Lámina Activa</span>
             </button>
-            <a href="tabla_derivadas.jpg" download="DiferencialLab_Tabla_Derivadas.jpg" class="secondary-button" id="btnDownloadActiveSheet">
-              <span>⬇️ Descargar Imagen</span>
+            <a href="tabla_edo_p1.jpg" download="DiferencialLab_Formulario_EDO_Parte1.jpg" class="secondary-button" id="btnDownloadActiveSheet">
+              <span>⬇️ Descargar Imagen HD</span>
+            </a>
+            <a href="formulario_ecuaciones_diferenciales.pdf" download="Formulario_Ecuaciones_Diferenciales_DiferencialLab.pdf" class="secondary-button" id="btnDownloadPdf" title="Descargar documento PDF completo de 2 páginas" target="_blank">
+              <span style="color: #f43f5e;">📄</span> Descargar PDF Completo
             </a>
           </div>
         </div>
 
-        <!-- SELECTOR DE TABLAS (SOLO LAS 2 TABLAS) -->
-        <div class="form-selector-tabs form-selector-two" role="tablist">
-          <button class="form-tab-btn active" data-form="derivadas" id="tabBtnDerivadas">
+        <!-- SELECTOR DE LÁMINAS Y FORMULARIOS -->
+        <div class="form-selector-tabs" role="tablist">
+          <button class="form-tab-btn active" data-form="edo1" id="tabBtnEdo1">
+            <span class="tab-emoji">⚡</span>
+            <div class="form-tab-text">
+              <strong>Formulario EDO (Pág. 1)</strong>
+              <small>Separables & Homogéneas</small>
+            </div>
+          </button>
+          <button class="form-tab-btn" data-form="edo2" id="tabBtnEdo2">
+            <span class="tab-emoji">🎯</span>
+            <div class="form-tab-text">
+              <strong>Formulario EDO (Pág. 2)</strong>
+              <small>Exactas & Factor Integrante</small>
+            </div>
+          </button>
+          <button class="form-tab-btn" data-form="derivadas" id="tabBtnDerivadas">
             <span class="tab-emoji">📈</span>
             <div class="form-tab-text">
               <strong>Tabla de Derivadas</strong>
@@ -35,7 +52,7 @@
         <div class="panel form-image-panel" id="formImageContainer">
           <div class="image-viewer-toolbar">
             <div class="toolbar-left">
-              <span class="toolbar-sheet-name" id="toolbarSheetTitle">Lámina Oficial: TABLA DE DERIVADAS</span>
+              <span class="toolbar-sheet-name" id="toolbarSheetTitle">Lámina Oficial: FORMULARIO DE EDOs (Pág. 1)</span>
             </div>
             <div class="toolbar-center">
               <button class="viewer-btn" id="btnZoomOut" title="Alejar (Zoom -)">−</button>
@@ -50,7 +67,7 @@
 
           <div class="image-stage" id="imageStage">
             <div class="image-viewport" id="imageViewport">
-              <img src="tabla_derivadas.jpg?v=4" alt="Tabla de Derivadas DiferencialLab" class="formula-sheet-img" id="mainFormulaImg">
+              <img src="tabla_edo_p1.jpg?v=1" alt="Formulario de Ecuaciones Diferenciales" class="formula-sheet-img" id="mainFormulaImg">
             </div>
           </div>
         </div>

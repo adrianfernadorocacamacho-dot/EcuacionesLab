@@ -1,7 +1,25 @@
-/* RESET Y ESTILOS BASE */
-14px;
+/* ==============================================================================
+   RESET Y ESTILOS BASE
+   ============================================================================== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
   line-height: 1.6;
   overflow-x: hidden;
+  min-width: 320px;
 }
 
 button, input, select {
@@ -35,4 +53,3 @@ button {
     transform: none;
   }
 }
-

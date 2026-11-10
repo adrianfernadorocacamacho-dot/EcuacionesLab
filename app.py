@@ -25,11 +25,17 @@ app.register_blueprint(api_bp)
 # ==============================================================================
 
 @app.route("/")
+@app.route("/index.html")
+@app.route("/index.htm")
+@app.route("/interfaz/index.html")
 def index():
     return render_template("index.html")
 
 @app.route("/<path:filename>")
 def serve_static(filename):
+    # Si solicitan index.html por cualquier ruta, renderizarlo con Jinja2
+    if filename.lower() in ("index.html", "index.htm", "interfaz/index.html"):
+        return render_template("index.html")
     interfaz_file = os.path.join(INTERFAZ_DIR, filename)
     if os.path.exists(interfaz_file) and os.path.isfile(interfaz_file):
         return send_from_directory(INTERFAZ_DIR, filename)
