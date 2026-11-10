@@ -223,7 +223,9 @@
 
 .answer-box .answer-content,
 .answer-box strong {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font: 700 20px 'Space Grotesk', sans-serif;
   color: #6ee7b7;
   margin-top: 4px;
@@ -231,18 +233,26 @@
   overflow-y: hidden;
   max-width: 100%;
   text-align: center;
+  white-space: nowrap;
 }
 
-/* Reglas KaTeX para solución final: flujo horizontal */
+.answer-box .answer-content * {
+  white-space: nowrap;
+}
+
+/* Reglas KaTeX para solución final: flujo horizontal estricto */
 .answer-box .katex {
   font-size: 1.35em !important;
   color: #6ee7b7 !important;
   white-space: nowrap !important;
+  display: inline-block !important;
 }
 
 .answer-box .katex-display {
   margin: 6px 0 !important;
-  display: block !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
   text-align: center !important;
   overflow-x: auto !important;
 }

@@ -1,0 +1,336 @@
+/* ==============================================================================
+   DIFERENCIALLAB 2.0 - INTRO OVERLAY & ANIMACIONES MATEMÁTICAS
+   Basado en la experiencia de constellation/matrix matemática de inicio
+   ============================================================================== */
+
+/* Keyframes principales */
+@keyframes neonGlow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(0, 245, 212, 0.6), 0 0 25px rgba(168, 85, 247, 0.5), 0 0 50px rgba(217, 70, 239, 0.35);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(0, 245, 212, 0.95), 0 0 45px rgba(217, 70, 239, 0.85), 0 0 75px rgba(139, 92, 246, 0.7);
+  }
+}
+
+@keyframes logoAssemble {
+  0% {
+    transform: scale(0.65) rotate(-12deg);
+    opacity: 0;
+    filter: blur(8px);
+  }
+  60% {
+    transform: scale(1.05) rotate(2deg);
+    opacity: 0.95;
+    filter: blur(0px);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes vortexRing {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(0.7);
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) scale(1.15);
+    opacity: 0.25;
+  }
+}
+
+@keyframes sparkPing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Contenedor del Intro Overlay */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: #0a0614;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+}
+
+#intro-overlay.intro-dismissed {
+  opacity: 0 !important;
+  transform: scale(1.06) !important;
+  pointer-events: none !important;
+}
+
+/* Capa de fondo cósmico */
+.intro-nebula-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.intro-nebula-outer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 780px;
+  height: 780px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(217, 70, 239, 0.22) 0%, rgba(147, 51, 234, 0.18) 45%, rgba(0, 245, 212, 0.12) 70%, transparent 80%);
+  filter: blur(65px);
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+.intro-nebula-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 480px;
+  height: 480px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, transparent 70%);
+  filter: blur(40px);
+  border-radius: 50%;
+}
+
+.intro-ring-outer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  border: 1px dashed rgba(168, 85, 247, 0.28);
+  pointer-events: none;
+  animation: vortexRing 8s linear infinite;
+}
+
+.intro-ring-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 245, 212, 0.3);
+  pointer-events: none;
+  animation: vortexRing 5s linear infinite reverse;
+}
+
+.intro-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(168, 85, 247, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(168, 85, 247, 0.07) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Canvas de partículas matemáticas */
+#math-constellation-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Núcleo Central de Convergencia */
+.intro-brand-core {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 620px;
+  animation: logoAssemble 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.intro-badge-container {
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.intro-badge-glow {
+  position: absolute;
+  inset: -14px;
+  background: linear-gradient(135deg, rgba(217, 70, 239, 0.6), rgba(147, 51, 234, 0.7), rgba(0, 245, 212, 0.5));
+  border-radius: 28px;
+  filter: blur(20px);
+  opacity: 0.75;
+  animation: neonGlow 2.5s ease-in-out infinite alternate;
+}
+
+.intro-badge-box {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #271752 0%, #120c24 100%);
+  border: 1.5px solid rgba(217, 70, 239, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(217, 70, 239, 0.35);
+  color: #00f5d4;
+}
+
+.intro-badge-svg {
+  width: 44px;
+  height: 44px;
+  stroke: #00f5d4;
+  fill: none;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 12px #00f5d4);
+}
+
+.intro-orbit-spark {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #00f5d4;
+  box-shadow: 0 0 12px #00f5d4;
+  animation: sparkPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.intro-title {
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  font-size: clamp(34px, 5.2vw, 52px);
+  font-weight: 700;
+  letter-spacing: -1.2px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  animation: neonGlow 2s ease-in-out infinite;
+}
+
+.intro-title-lab {
+  background: linear-gradient(90deg, #00f5d4 0%, #f472b6 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: 'Space Grotesk', monospace;
+  font-weight: 800;
+}
+
+.intro-subtitle {
+  margin: 12px 0 0;
+  font-size: clamp(10px, 1.8vw, 12px);
+  font-family: 'Space Grotesk', monospace;
+  font-weight: 600;
+  color: rgba(221, 214, 254, 0.9);
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+}
+
+.intro-formula-bar {
+  margin-top: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(11px, 2vw, 13px);
+  font-family: 'Space Grotesk', 'Fira Code', monospace;
+  color: #67e8f9;
+  background: rgba(30, 16, 56, 0.75);
+  border: 1px solid rgba(168, 85, 247, 0.38);
+  padding: 8px 20px;
+  border-radius: 9999px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.28);
+}
+
+.intro-formula-bar .sym-integral {
+  color: #f59e0b;
+  font-size: 14px;
+}
+
+.intro-formula-bar .sym-nabla {
+  color: #ec4899;
+  font-size: 14px;
+}
+
+.intro-status-tag {
+  margin-top: 16px;
+  font-size: 10.5px;
+  font-family: 'Space Grotesk', monospace;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: rgba(192, 132, 252, 0.75);
+}
+
+/* Botón Omitir */
+#skip-intro-btn {
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c4b5fd;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+#skip-intro-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #00f5d4;
+  border-color: rgba(0, 245, 212, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 245, 212, 0.25);
+}
+
+#skip-intro-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  #skip-intro-btn {
+    bottom: 20px;
+    right: 20px;
+    padding: 6px 14px;
+    font-size: 11px;
+  }
+  .intro-formula-bar {
+    font-size: 10.5px;
+    padding: 6px 14px;
+    gap: 8px;
+  }
+}

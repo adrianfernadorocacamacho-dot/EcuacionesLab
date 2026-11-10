@@ -12,24 +12,847 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
 </head>
 <body>
+  <!-- ==============================================================================
+       PANTALLA DE ENTRADA / INTRO SCREEN OVERLAY (CONSTELACIÓN MATEMÁTICA Y PARTÍCULAS)
+       ============================================================================== -->
+  <div id="intro-overlay" role="dialog" aria-modal="true" aria-label="Pantalla de bienvenida DiferencialLab">
+    <!-- Capa de fondo cósmico & nebulosa orbital -->
+    <div class="intro-nebula-wrap" aria-hidden="true">
+      <div class="intro-nebula-outer"></div>
+      <div class="intro-nebula-inner"></div>
+      <div class="intro-ring-outer"></div>
+      <div class="intro-ring-inner"></div>
+      <div class="intro-grid-pattern"></div>
+    </div>
+
+    <!-- Canvas de partículas matemáticas -->
+    <canvas id="math-constellation-canvas" aria-hidden="true"></canvas>
+
+    <!-- Núcleo Central de Convergencia -->
+    <div class="intro-brand-core">
+      <div class="intro-badge-container">
+        <div class="intro-badge-glow"></div>
+        <div class="intro-badge-box">
+          <svg class="intro-badge-svg" viewBox="0 0 24 24">
+            <path d="M19 6H6l8 6-8 6h13" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span class="intro-orbit-spark"></span>
+        </div>
+      </div>
+
+      <h1 class="intro-title">
+        <span>Diferencial</span><span class="intro-title-lab">Lab</span>
+      </h1>
+
+      <p class="intro-subtitle">
+        LABORATORIO MATEMÁTICO · ECUACIONES DIFERENCIALES
+      </p>
+
+      <div class="intro-formula-bar">
+        <span class="sym-integral">∫</span>
+        <span>e^{iπ} + 1 = 0 · dy/dx = f(x,y)</span>
+        <span class="sym-nabla">∇</span>
+      </div>
+
+      <div class="intro-status-tag">
+        Inicializando Kernel Matemático...
+      </div>
+    </div>
+
+    <!-- Botón Omitir -->
+    <button id="skip-intro-btn" type="button" aria-label="Omitir introducción">
+      <span>Omitir</span>
+      <span>✕</span>
+    </button>
+  </div>
+
+  <!-- SCRIPT DE PANTALLA DE ENTRADA: PARTÍCULAS Y VÓRTICE MATEMÁTICO -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('intro-overlay');
+      const skipBtn = document.getElementById('skip-intro-btn');
+      const canvas = document.getElementById('math-constellation-canvas');
+      if (!overlay) return;
+
+      let dismissed = false;
+      let animFrameId = null;
+
+      // Biblioteca de símbolos y fórmulas matemáticas
+      const symbols = [
+        '∫', '∂y/∂x', '∑', 'π', 'e^{iπ}+1=0', 'dy/dx', 'λ', '∞', '√2', '∇',
+        'lim x→0', "f'(x)", '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'dx', 'dt', "y''", 'μ', 'θ', 'sin(x)', 'cos(x)', 'e^x', 'y=Ce^{kx}', '∮', 'Δt'
+      ];
+
+      const colors = [
+        'rgba(0, 245, 212, ',   // cian
+        'rgba(217, 70, 239, ',  // fucsia
+        'rgba(168, 85, 247, ',  // violeta
+        'rgba(245, 158, 11, ',  // ámbar
+        'rgba(192, 132, 252, '  // púrpura claro
+      ];
+
+      let particles = [];
+      let width = 0, height = 0;
+      let ctx = null;
+
+      if (canvas && canvas.getContext) {
+        ctx = canvas.getContext('2d');
+
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize, { passive: true });
+
+        // Crear partículas flotantes y convergentes
+        const count = Math.min(65, Math.floor((width * height) / 18000));
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = 180 + Math.random() * Math.max(width, height) * 0.65;
+          particles.push({
+            text: symbols[Math.floor(Math.random() * symbols.length)],
+            colorBase: colors[Math.floor(Math.random() * colors.length)],
+            fontSize: 11 + Math.floor(Math.random() * 14),
+            angle: angle,
+            distance: dist,
+            speed: 0.6 + Math.random() * 1.8,
+            rotSpeed: (Math.random() - 0.5) * 0.015,
+            alpha: 0.2 + Math.random() * 0.75
+          });
+        }
+
+        const startTime = performance.now();
+
+        function drawMatrix(timestamp) {
+          if (dismissed) return;
+          const elapsed = (timestamp - startTime) / 1000;
+          ctx.clearRect(0, 0, width, height);
+
+          const centerX = width / 2;
+          const centerY = height / 2;
+
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+
+            // Convergencia gravitacional hacia el centro después de 0.6s
+            if (elapsed > 0.6) {
+              p.distance -= (p.speed * (1 + elapsed * 1.3));
+              if (p.distance < 45) {
+                p.distance = Math.max(width, height) * 0.6 + Math.random() * 100;
+                p.alpha = 0.15;
+              }
+            }
+
+            p.angle += p.rotSpeed;
+
+            const px = centerX + Math.cos(p.angle) * p.distance;
+            const py = centerY + Math.sin(p.angle) * (p.distance * 0.65) + Math.sin(elapsed + i) * 6;
+
+            const currentAlpha = Math.min(p.alpha, elapsed * 0.9);
+
+            ctx.font = `${p.fontSize}px 'Space Grotesk', monospace`;
+            ctx.fillStyle = p.colorBase + currentAlpha + ')';
+            ctx.fillText(p.text, px, py);
+          }
+
+          animFrameId = requestAnimationFrame(drawMatrix);
+        }
+
+        animFrameId = requestAnimationFrame(drawMatrix);
+      }
+
+      function dismissIntro() {
+        if (dismissed) return;
+        dismissed = true;
+        if (animFrameId) {
+          cancelAnimationFrame(animFrameId);
+        }
+        overlay.classList.add('intro-dismissed');
+        setTimeout(() => {
+          try { overlay.remove(); } catch (e) {}
+        }, 700);
+      }
+
+      // Descartar automáticamente tras 2.8 segundos
+      const timer = setTimeout(dismissIntro, 2800);
+
+      // Descartar con botón de omitir
+      if (skipBtn) {
+        skipBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          clearTimeout(timer);
+          dismissIntro();
+        });
+      }
+
+      // Descartar al hacer clic en el overlay o presionar cualquier tecla
+      overlay.addEventListener('click', () => {
+        clearTimeout(timer);
+        dismissIntro();
+      });
+
+      window.addEventListener('keydown', () => {
+        clearTimeout(timer);
+        dismissIntro();
+      }, { once: true });
+    })();
+  </script>
+
   <!-- TELÓN DE FONDO PARA CIERRE DEL MENÚ LATERAL EN MÓVILES -->
   <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
   <div class="app-shell">
     <!-- BARRA LATERAL DE NAVEGACIÓN -->
-    {% include 'componentes/sidebar.html' %}
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" data-view="inicio" id="brandLogo">
+        <span class="brand-mark">∑</span>
+        <span><strong>Diferencial<span>Lab</span></strong><small>LABORATORIO V2.0</small></span>
+      </a>
+      <div class="side-label">MENÚ EDUCATIVO</div>
+      <nav class="nav-menu" aria-label="Navegación principal">
+        <button class="nav-link active" data-view="inicio" id="nav-inicio"><span>⌂</span> Inicio</button>
+        <button class="nav-link" data-view="resolver" id="nav-resolver"><span class="glow-icon">⚡</span> Calculadora</button>
+        <button class="nav-link" data-view="aprender" id="nav-aprender"><span class="glow-icon">✦</span> Aprende & Curiosidades</button>
+        <button class="nav-link" data-view="practicar" id="nav-practicar"><span>◈</span> Trivia & Juego</button>
+        <button class="nav-link" data-view="formularios" id="nav-formularios"><span>📑</span> Formularios</button>
+      </nav>
+    </aside>
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
       <!-- BARRA SUPERIOR -->
-      {% include 'componentes/topbar.html' %}
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menú">☰</button>
+        <div class="breadcrumb">
+          Aula Virtual <span>/</span> <strong id="crumb">Inicio</strong>
+        </div>
+        <div class="top-actions">
+          <button class="topbar-btn-pill" data-go="resolver" title="Calculadora Paso a Paso"><span>⚡</span> Calculadora</button>
+          <button class="topbar-btn-pill" data-go="formularios" title="Ver Formularios para Imprimir"><span>🖨️</span> Formularios</button>
+          <div class="backend-pill" id="backendPill" title="Estado de la conexión">
+            <span class="live-dot" id="liveDot"></span>
+            <span id="backendStatusText">Detectando Python...</span>
+          </div>
+          <button class="icon-button" id="soundToggle" title="Activar/Desactivar Sonido" aria-label="Alternar sonido">🔊</button>
+        </div>
+      </header>
 
-      <!-- VISTAS MODULARES -->
-      {% include 'vistas/inicio.html' %}
-      {% include 'vistas/resolver.html' %}
-      {% include 'vistas/aprender.html' %}
-      {% include 'vistas/practicar.html' %}
-      {% include 'vistas/formularios.html' %}
+      <!-- VISTAS DEL LABORATORIO -->
+      <section class="view active" id="view-inicio">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="spark">✦</span> DIFERENCIALLAB · VERSIÓN 2.0</div>
+            <h1>Las matemáticas<br>cobran <span>vida real.</span></h1>
+            <p>Descubre el mundo de las <strong>ecuaciones diferenciales</strong> de forma didáctica: resuelve paso a paso con explicaciones claras, aprende fundamentos teóricos, descubre anécdotas insólitas y pon a prueba tus conocimientos en la Trivia.</p>
+            <div class="hero-actions">
+              <button class="primary-button" data-go="resolver">Calculadora <span>⚡</span></button>
+              <button class="secondary-button" data-go="practicar">¡Jugar la Trivia! <span>🎮</span></button>
+              <button class="secondary-button" data-go="aprender">Aprende & Curiosidades <span>✦</span></button>
+              <button class="secondary-button" data-go="formularios">Formularios <span>📑</span></button>
+            </div>
+          </div>
+          <div class="hero-art" aria-label="Ilustración matemática: Plano de Fase dinámico">
+            <div class="orb orb-one"></div>
+            <div class="orb orb-two"></div>
+
+            <div class="hero-graph-box">
+              <div class="hero-graph-grid"></div>
+              <div class="hero-graph-top">
+                <span class="phase-plane-tag"><span class="ping-dot"></span> Plano de Fase · ℝ²</span>
+                <span class="phase-plane-formula">dy/dx = f(x, y)</span>
+              </div>
+
+              <svg class="phase-plane-svg" viewBox="0 0 340 140" fill="none" role="img" aria-label="Órbitas en el plano de fase">
+                <defs>
+                  <filter id="curveGlowCyan" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"></feGaussianBlur>
+                    <feMerge>
+                      <feMergeNode in="blur"></feMergeNode>
+                      <feMergeNode in="SourceGraphic"></feMergeNode>
+                    </feMerge>
+                  </filter>
+                  <linearGradient id="tangentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#00f5d4" stop-opacity="0"></stop>
+                    <stop offset="50%" stop-color="#00f5d4" stop-opacity="0.8"></stop>
+                    <stop offset="100%" stop-color="#00f5d4" stop-opacity="0"></stop>
+                  </linearGradient>
+                </defs>
+                <!-- Ejes coordenados -->
+                <line x1="20" y1="120" x2="320" y2="120" stroke="rgba(168,85,247,0.25)" stroke-width="1"></line>
+                <line x1="20" y1="20" x2="20" y2="120" stroke="rgba(168,85,247,0.25)" stroke-width="1"></line>
+                <!-- Trayectoria 1: Curva S cian brillante -->
+                <path id="cyan-trajectory-path" d="M 20 115 C 90 115, 140 95, 200 45 C 245 10, 280 20, 320 22" fill="none" stroke="#00f5d4" stroke-width="2.5" stroke-linecap="round" filter="url(#curveGlowCyan)" opacity="0.95"></path>
+                <!-- Trayectoria 2: Arco violeta punteado animado -->
+                <path d="M 20 70 C 80 80, 130 95, 180 88 C 240 80, 270 45, 320 15" fill="none" stroke="#a855f7" stroke-dasharray="4 4" stroke-width="2" opacity="0.75">
+                  <animate attributeName="stroke-dashoffset" values="0; -32" dur="3s" repeatCount="indefinite"></animate>
+                </path>
+                <!-- Trayectoria 3: Asíntota con pendiente -->
+                <path d="M 20 30 C 100 48, 160 85, 230 115" fill="none" stroke="#6366f1" stroke-width="1.8" opacity="0.45"></path>
+                <!-- Halo difuso ambiental -->
+                <circle cx="280" cy="80" r="32" fill="#d946ef" opacity="0.18"></circle>
+                <!-- Partícula luminosa viajera -->
+                <circle r="4" fill="#ffffff" filter="url(#curveGlowCyan)">
+                  <animateMotion path="M 20 115 C 90 115, 140 95, 200 45 C 245 10, 280 20, 320 22" dur="5s" repeatCount="indefinite" keyTimes="0;0.5;1" keyPoints="0;0.55;1"></animateMotion>
+                </circle>
+                <!-- Fotón secundario cian -->
+                <circle r="2.5" fill="#00f5d4" opacity="0.75">
+                  <animateMotion path="M 20 115 C 90 115, 140 95, 200 45 C 245 10, 280 20, 320 22" dur="5s" begin="-0.35s" repeatCount="indefinite"></animateMotion>
+                </circle>
+                <!-- Nodo de equilibrio con halo dinámico -->
+                <g>
+                  <circle cx="200" cy="45" r="5" fill="#00f5d4"></circle>
+                  <circle cx="200" cy="45" r="10" stroke="#00f5d4" stroke-width="1.5" opacity="0.5">
+                    <animate attributeName="r" values="8;14;8" dur="2s" repeatCount="indefinite"></animate>
+                    <animate attributeName="opacity" values="0.7;0.1;0.7" dur="2s" repeatCount="indefinite"></animate>
+                  </circle>
+                </g>
+                <!-- Línea tangente animada -->
+                <line x1="165" y1="70" x2="235" y2="20" stroke="url(#tangentGrad)" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.8">
+                  <animate attributeName="y1" values="70; 65; 70" dur="4s" repeatCount="indefinite"></animate>
+                  <animate attributeName="y2" values="20; 25; 20" dur="4s" repeatCount="indefinite"></animate>
+                </line>
+              </svg>
+
+              <div class="hero-graph-bottom">
+                <span class="math-badge badge-amber">m·y″ + c·y′ + k·y = 0</span>
+                <span class="math-badge badge-cyan">y = C·e<sup>kx</sup></span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-footer">
+            <span>01 / LABORATORIO EDUCATIVO ACTIVO</span>
+            <span>FUNDAMENTOS · HISTORIA · RULETA INTERACTIVA · BANCO DE 32 PREGUNTAS · FORMULARIOS OFICIALES</span>
+          </div>
+        </div>
+
+        <!-- TARJETA DESTACADA: DATO CURIOSO DEL DÍA -->
+        <div class="spotlight-card" id="spotlightCuriosity">
+          <div class="spotlight-badge"><span class="spark">⚡</span> DATO CURIOSO DESTACADO</div>
+          <div class="spotlight-content">
+            <div class="spotlight-icon" id="spotlightIcon">🌉</div>
+            <div class="spotlight-info">
+              <h3 id="spotlightTitle">El Colapso del Puente de Tacoma Narrows</h3>
+              <p id="spotlightText">En 1940, un viento moderado de 68 km/h generó vórtices periódicos que coincidieron exactamente con la frecuencia natural de torsión del puente. El fenómeno se modela matemáticamente con la EDO de segundo orden de un oscilador forzado.</p>
+            </div>
+            <button class="accent-btn" id="btnNextCuriosity" title="Descubrir otro dato curioso">¡Otro dato! ↻</button>
+          </div>
+        </div>
+
+        <!-- RUTA DE APRENDIZAJE -->
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">TU RUTA DE APRENDIZAJE</div>
+            <h2>¿Qué te gustaría explorar hoy?</h2>
+          </div>
+          <span class="muted">Elige un módulo para comenzar</span>
+        </div>
+
+        <div class="feature-grid">
+          <button class="feature-card highlight-card" data-go="resolver">
+            <span class="feature-icon blue">⚡</span>
+            <span class="card-kicker">01 · RESOLUTOR PASO A PASO</span>
+            <strong>Calculadora</strong>
+            <p>Resuelve analíticamente cualquier EDO con procedimiento detallado paso a paso para estudiantes, PVI y gráfica.</p>
+            <span class="card-arrow">Calcular ahora ↗</span>
+          </button>
+
+          <button class="feature-card" data-go="aprender">
+            <span class="feature-icon yellow">✦</span>
+            <span class="card-kicker">02 · FUNDAMENTOS & HISTORIA</span>
+            <strong>Aprende & Curiosidades</strong>
+            <p>Bases teóricas, métodos de solución, anécdotas insólitas con el dado interactivo y banco de estudio.</p>
+            <span class="card-arrow">Comenzar a aprender ↗</span>
+          </button>
+
+          <button class="feature-card special-card" data-go="practicar">
+            <span class="feature-icon orange">◈</span>
+            <span class="card-kicker">03 · JUEGO & AUTOEVALUACIÓN</span>
+            <strong>Trivia de Preguntas</strong>
+            <p>Modo Desafío Contrarreloj, Modo Supervivencia con 3 vidas, racha de combos y medallas desbloqueables.</p>
+            <span class="card-arrow">¡Jugar ahora! ↗</span>
+          </button>
+
+          <button class="feature-card highlight-card-blue" data-go="formularios">
+            <span class="feature-icon purple">📑</span>
+            <span class="card-kicker">04 · TABLAS & FÓRMULAS</span>
+            <strong>Formularios Oficiales</strong>
+            <p>Tablas completas de Derivadas (32) e Integrales (53) con visor HD interactivo y búsqueda matemática.</p>
+            <span class="card-arrow">Consultar tablas ↗</span>
+          </button>
+        </div>
+
+        <div class="bottom-grid">
+          <div class="panel welcome-panel">
+            <div>
+              <div class="eyebrow">EL PODER DE LAS EDOS</div>
+              <h3>Modelar la realidad en cambio continuo.</h3>
+              <p>Las ecuaciones diferenciales son el lenguaje con el que la naturaleza describe cómo cambia el universo: desde la órbita de un planeta hasta cómo se disuelve una medicina en tu cuerpo.</p>
+              <button class="text-button" data-go="curiosidades">Descubre datos fascinantes <span>→</span></button>
+            </div>
+            <div class="mini-equation">
+              cambio<br><span>→</span> EDO<br><span>→</span> solución
+            </div>
+          </div>
+
+          <div class="panel progress-panel">
+            <div class="panel-title">
+              <div>
+                <div class="eyebrow">TU PROGRESO EN EL JUEGO</div>
+                <h3 id="panelLevelTitle">Nivel: Iniciado Matemático</h3>
+              </div>
+              <span class="progress-ring" id="trophyIcon">🏆</span>
+            </div>
+            <p>Gana puntos en la Trivia respondiendo preguntas aleatorias del banco.</p>
+            <div class="progress-track"><span id="progressBar"></span></div>
+            <div class="progress-caption">
+              <span id="progressText">Puntuación máxima: 0 pts</span>
+              <strong id="progressScore">0%</strong>
+            </div>
+            <div class="badge-mini-shelf" id="miniBadges">
+              <span class="badge-tag locked" id="badge-1" title="Primer Reto Superado">🎖️ Novato</span>
+              <span class="badge-tag locked" id="badge-2" title="Racha de 5 aciertos">🔥 Racha</span>
+              <span class="badge-tag locked" id="badge-3" title="Respuestas Rápidas">⚡ Rayo</span>
+              <span class="badge-tag locked" id="badge-4" title="Maestro de EDOs">🧠 Maestro</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-resolver">
+        <div class="page-intro">
+          <div class="eyebrow">MÓDULO 02 · RESOLUTOR ANALÍTICO PASO A PASO</div>
+          <h1>Calculadora de Ecuaciones Diferenciales Paso a Paso</h1>
+          <p>Aprende cómo se resuelve cada ecuación diferencial paso a paso: identificación de variables, método de solución, integración detallada, despeje de constantes y gráfica de la solución.</p>
+        </div>
+
+        <div class="solver-layout">
+          <!-- PANEL IZQUIERDO: CONTROLES -->
+          <div class="panel solver-controls">
+            <div class="panel-header-clean">
+              <span class="feature-icon blue">⚡</span>
+              <div>
+                <h3 style="margin: 0; font-size: 16px;">Configurar Ecuación</h3>
+                <small style="color: #94a3b8; font-size: 11px;">Elige un modelo guiado o escribe tu propia ecuación libre</small>
+              </div>
+            </div>
+
+            <div class="solver-mode-selector">
+              <button type="button" class="mode-btn active" id="btnModePreset">Modelos Guiados</button>
+              <button type="button" class="mode-btn" id="btnModeCustom">Entrada Libre</button>
+            </div>
+
+            <!-- CONTROLES MODO PRESET -->
+            <div id="presetControlsArea">
+              <label for="solverType">Tipo de Ecuación Diferencial:</label>
+              <select id="solverType">
+                <option value="exp">Crecimiento / Decaimiento (y' = k·y)</option>
+                <option value="cooling">Enfriamiento de Newton (y' = -k·(y - Ta))</option>
+                <option value="linear">Lineal de 1er Orden (y' + a·y = b)</option>
+                <option value="harmonic">Oscilador Armónico Libre (y'' + ω²·y = 0)</option>
+                <option value="power">Potencial Simple (y' = a·x^n)</option>
+              </select>
+
+              <div class="input-row" id="paramsRow1" style="margin-top: 12px;">
+                <div>
+                  <label id="labelParamA" for="paramA">Tasa k</label>
+                  <input type="number" id="paramA" value="2" step="0.5">
+                </div>
+                <div id="paramSecondCol" style="display: none;">
+                  <label id="labelParamB" for="paramB">Parámetro b</label>
+                  <input type="number" id="paramB" value="4" step="0.5">
+                </div>
+              </div>
+            </div>
+
+            <!-- CONTROLES MODO CUSTOM (ENTRADA LIBRE) -->
+            <div id="customControlsArea" style="display: none;">
+              <label for="customEquationInput">Escribe tu ecuación diferencial:</label>
+              <input type="text" id="customEquationInput" placeholder="Ej: y' + 2*y = 4, y' = 3*y, y'' + 9*y = 0" value="y' + 2*y = 4">
+              
+              <div class="input-examples">
+                <span style="font-weight: 600;">Ejemplos rápidos:</span>
+                <button type="button" class="example-chip" data-eq="y' = 3*y">y' = 3y</button>
+                <button type="button" class="example-chip" data-eq="y' + 2*y = 4">y' + 2y = 4</button>
+                <button type="button" class="example-chip" data-eq="y'' + 9*y = 0">y'' + 9y = 0</button>
+                <button type="button" class="example-chip" data-eq="y' = -0.5*(y - 20)">Newton</button>
+                <button type="button" class="example-chip" data-eq="y' = 2*x**2">y' = 2x²</button>
+              </div>
+              <small style="display: block; margin-top: 8px; color: #94a3b8; font-size: 11px;">Sintaxis: usa <code>y'</code> para dy/dx, <code>y''</code> para d²y/dx², <code>*</code> para multiplicar y <code>**</code> para potencias.</small>
+            </div>
+
+            <!-- SECCIÓN CONDICIONES INICIALES -->
+            <div class="ics-section">
+              <label style="font-weight: 700; color: #c4b5fd; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Condición Inicial (Problema de Valor Inicial):</label>
+              <div class="input-row">
+                <div>
+                  <label for="initialX0">Punto x₀</label>
+                  <input type="number" id="initialX0" value="0" step="0.5">
+                </div>
+                <div>
+                  <label for="initialY0">Valor y(x₀)</label>
+                  <input type="number" id="initialY0" value="1" step="0.5">
+                </div>
+              </div>
+              <div id="secondOrderCond" style="display: none; margin-top: 10px;">
+                <label id="labelInitialY1" for="initialY1">Derivada y'(x₀)</label>
+                <input type="number" id="initialY1" value="0" step="0.5">
+              </div>
+            </div>
+
+            <button type="button" class="primary-button full" id="solveButton" style="margin-top: 18px;">
+              <span>⚡</span> Resolver Paso a Paso
+            </button>
+
+            <div class="small-note" id="solverEngineNote" style="margin-top: 14px;">
+              ✦ Modo didáctico: Explicación pedagógica detallada paso a paso.
+            </div>
+          </div>
+
+          <!-- PANEL DERECHO: PROCEDIMIENTO PASO A PASO Y RESULTADOS -->
+          <div class="panel solution-panel">
+            <h3 id="solutionTitle" style="margin-top: 0;">Procedimiento y Solución Paso a Paso</h3>
+            
+            <div class="equation-display-box" id="latexEquation"></div>
+
+            <div class="solution-steps" id="solutionSteps">
+              <!-- Pasos generados analíticamente -->
+            </div>
+
+            <div class="answer-box">
+              <span class="answer-label">SOLUCIÓN FINAL (ANALÍTICA)</span>
+              <div class="answer-content" id="solutionAnswer"></div>
+            </div>
+
+            <div class="solution-mini-chart">
+              <div class="mini-chart-header">
+                <span>Curva de Solución Evaluada</span>
+                <span class="badge-chip">Intervalo [x₀, x₀ + 5]</span>
+              </div>
+              <canvas id="miniSolverCanvas" height="130"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-aprender">
+        <div class="page-intro">
+          <div class="eyebrow">MÓDULO 01 · GUÍA DIDÁCTICA, TEORÍA & HISTORIA</div>
+          <h1>Aprende los conceptos y descubre la historia de las EDOs.</h1>
+          <p>Explora las bases teóricas, tira el dado en la Ruleta de Curiosidades interactiva y estudia las explicaciones oficiales con sus preguntas resueltas.</p>
+        </div>
+
+        <!-- RULETA DE CURIOSIDADES INTERACTIVA CON EL DADO -->
+        <div class="panel curiosity-hero-panel">
+          <div class="curiosity-dice-area">
+            <span class="dice-emoji" id="mainDiceIcon" title="¡Haz clic en el dado para rodarlo!">🎲</span>
+            <div>
+              <h3>Ruleta de Curiosidades & Anécdotas</h3>
+              <p>Haz clic en el botón o en el dado para descubrir un misterio o hecho histórico fascinante al azar.</p>
+            </div>
+            <button class="primary-button" id="btnRollCuriosity">¡Tirar el dado y descubrir dato! <span>🎲✨</span></button>
+          </div>
+          <div class="curiosity-featured-box" id="curiosityFeaturedCard">
+            <!-- Cargado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- PESTAÑAS DE TEMAS TEÓRICOS -->
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow"><span class="spark">📘</span> TEORÍA ESENCIAL</div>
+            <h2>Conceptos y Métodos Fundamentales</h2>
+          </div>
+          <span class="muted">Selecciona un tema para estudiar</span>
+        </div>
+
+        <div class="topic-tabs" role="tablist">
+          <button class="topic-tab active" data-topic="concepto">Concepto & Definición</button>
+          <button class="topic-tab" data-topic="clasificacion">Orden, Grado & Linealidad</button>
+          <button class="topic-tab" data-topic="metodos">Métodos de Solución</button>
+          <button class="topic-tab" data-topic="segundo_orden">Segundo Orden & Oscilaciones</button>
+        </div>
+        <div class="panel lesson-panel" id="lessonContent"></div>
+        <div class="callout">
+          <span>✦</span>
+          <div>
+            <strong>Regla de oro de las soluciones</strong>
+            <p>Una función es solución de una ecuación diferencial si al sustituirla junto con sus derivadas en la ecuación, se satisface la igualdad para todo valor del intervalo de definición.</p>
+          </div>
+        </div>
+
+        <!-- MISTERIOS Y ANÉCDOTAS POR CATEGORÍAS -->
+        <div class="section-heading" style="margin-top: 36px;">
+          <div>
+            <div class="eyebrow"><span class="spark">🏛️</span> ARCHIVO DE HISTORIAS</div>
+            <h2>Historias Humanas y Misterios de las EDOs</h2>
+          </div>
+          <span class="muted">Filtra por categoría de interés</span>
+        </div>
+
+        <div class="category-filter-bar">
+          <button class="filter-chip active" data-cat="todas">Todos los temas</button>
+          <button class="filter-chip" data-cat="historia">🏛️ Historia & Rivalidades</button>
+          <button class="filter-chip" data-cat="mundo_real">🌍 En el Mundo Real</button>
+          <button class="filter-chip" data-cat="tecnologia">🎮 Tecnología & Juegos</button>
+          <button class="filter-chip" data-cat="anecdotas">💡 Anécdotas Científicas</button>
+        </div>
+
+        <div class="curiosity-grid" id="curiosityGrid">
+          <!-- Renderizado dinámicamente con JavaScript -->
+        </div>
+
+        <!-- SECCIÓN DE RESPUESTAS EXPLICADAS PARA APRENDER ANTES DE JUGAR -->
+        <div class="study-guide-header" style="margin-top: 40px;">
+          <div>
+            <div class="eyebrow"><span class="spark">📖</span> BANCO DE ESTUDIO OFICIAL</div>
+            <h2>Preguntas y Respuestas para Estudiar</h2>
+            <p>Aquí tienes las 32 preguntas de la Trivia con sus respuestas correctas reveladas, explicadas paso a paso y con consejos para que aprendas antes de entrar al juego.</p>
+          </div>
+          <button class="primary-button" data-go="practicar">
+            <span>¡Ir a Jugar la Trivia!</span> <span>🎮</span>
+          </button>
+        </div>
+
+        <!-- BARRA DE BÚSQUEDA Y FILTROS DEL BANCO DE ESTUDIO -->
+        <div class="study-search-wrap">
+          <input type="text" id="studySearchInput" class="study-search-input" placeholder="🔍 Buscar por palabra clave (ej: orden, Bernoulli, Euler, factor integrante, Tacoma)...">
+        </div>
+
+        <div class="study-filters-bar" id="studyFiltersBar">
+          <button class="study-filter-btn active" data-filter="todas">🌟 Todas las Respuestas (32)</button>
+          <button class="study-filter-btn" data-filter="Conceptos Básicos">📘 Conceptos Básicos</button>
+          <button class="study-filter-btn" data-filter="Clasificación">🏷️ Clasificación</button>
+          <button class="study-filter-btn" data-filter="Métodos">⚡ Métodos</button>
+          <button class="study-filter-btn" data-filter="Aplicaciones">🌍 Aplicaciones</button>
+          <button class="study-filter-btn" data-filter="Curiosidades">💡 Curiosidades</button>
+        </div>
+
+        <!-- CONTENEDOR DE TARJETAS DE ESTUDIO -->
+        <div class="study-cards-grid" id="studyCardsContainer">
+          <!-- Renderizado dinámicamente con las preguntas, respuestas en verde, explicaciones y tips -->
+        </div>
+      </section>
+
+      <section class="view" id="view-practicar">
+        <div class="page-intro">
+          <div class="eyebrow">MÓDULO 05 · LABORATORIO DE JUEGO & AUTOEVALUACIÓN</div>
+          <h1>DiferencialTrivia: Banco de Preguntas.</h1>
+          <p>Pon a prueba tus conocimientos con preguntas aleatorias, rachas de combo, vidas y explicaciones didácticas.</p>
+        </div>
+
+        <!-- SELECTOR DE MODO DE JUEGO -->
+        <div class="game-modes-grid" id="gameModeSelection">
+          <div class="game-mode-card" data-mode="desafio">
+            <div class="mode-icon">⏱️</div>
+            <h3>Modo Desafío Exprés</h3>
+            <p>10 preguntas aleatorias con temporizador de 20s. ¡Gana puntos extra por rapidez y combo!</p>
+            <span class="mode-btn-start">Iniciar Desafío <span>→</span></span>
+          </div>
+
+          <div class="game-mode-card" data-mode="supervivencia">
+            <div class="mode-icon">❤️</div>
+            <h3>Modo Supervivencia</h3>
+            <p>Empiezas con 3 vidas. Cada error te resta un corazón. ¿Hasta qué ronda podrás llegar?</p>
+            <span class="mode-btn-start">Probar Resistencia <span>→</span></span>
+          </div>
+
+          <div class="game-mode-card" data-mode="practica">
+            <div class="mode-icon">🎓</div>
+            <h3>Práctica Libre</h3>
+            <p>Aprende a tu propio ritmo sin presión de tiempo, con explicaciones detalladas en cada respuesta.</p>
+            <span class="mode-btn-start">Entrenar sin Prisa <span>→</span></span>
+          </div>
+        </div>
+
+        <!-- TABLERO DE JUEGO ACTIVO -->
+        <div class="quiz-layout" id="activeGameArea" style="display: none;">
+          <div class="panel quiz-panel">
+            <!-- HUD SUPERIOR DEL JUEGO -->
+            <div class="game-hud">
+              <div class="hud-left">
+                <span class="quiz-tag" id="gameModeBadge">MODO DESAFÍO</span>
+                <span id="quizCounter" class="hud-counter">PREGUNTA 1 DE 10</span>
+              </div>
+              <div class="hud-center" id="hudTimerArea">
+                <span class="timer-icon">⏳</span>
+                <span id="timerSeconds">20s</span>
+              </div>
+              <div class="hud-right">
+                <div class="lives-container" id="livesDisplay" style="display:none;">
+                  <span class="heart active">❤️</span>
+                  <span class="heart active">❤️</span>
+                  <span class="heart active">❤️</span>
+                </div>
+                <div class="combo-badge" id="comboBadge" style="display:none;">
+                  <span>🔥</span> <strong id="comboMultiplier">x2 COMBO</strong>
+                </div>
+                <div class="score-display">
+                  <span class="score-label">PUNTOS</span>
+                  <strong id="quizScore">0</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- BARRA DE TIEMPO / PROGRESO -->
+            <div class="quiz-progress">
+              <span id="quizProgressBar"></span>
+            </div>
+
+            <!-- ENUNCIADO DE LA PREGUNTA -->
+            <div class="question-meta">
+              <span class="question-category" id="questionCategory">Conceptos Fundamentales</span>
+              <span class="question-difficulty" id="questionDifficulty">Fácil</span>
+            </div>
+            <h2 id="questionText">Cargando pregunta...</h2>
+
+            <!-- OPCIONES DE RESPUESTA -->
+            <div id="answerOptions" class="answer-options"></div>
+
+            <!-- RETROALIMENTACIÓN DIDÁCTICA -->
+            <div id="feedback" class="feedback" aria-live="polite"></div>
+
+            <!-- PIE DEL JUEGO -->
+            <div class="quiz-footer">
+              <button class="secondary-button" id="btnExitGame">Salir al menú</button>
+              <button class="primary-button" id="nextQuestion" disabled>Siguiente pregunta <span>→</span></button>
+            </div>
+          </div>
+
+          <!-- PANEL LATERAL DE LOGROS Y DATOS -->
+          <aside class="panel quiz-aside">
+            <span class="feature-icon orange">◈</span>
+            <h3>Laboratorio de Retos</h3>
+            <p>Cada pregunta está basada en el temario de ecuaciones diferenciales y sus aplicaciones del mundo real.</p>
+            
+            <div class="aside-stat">
+              <strong>32</strong>
+              <span>Preguntas en el banco aleatorio</span>
+            </div>
+
+            <div class="aside-stat">
+              <strong id="statCurrentStreak">0</strong>
+              <span>Racha de aciertos actual</span>
+            </div>
+
+            <div class="aside-stat">
+              <strong id="statBestScore">0</strong>
+              <span>Tu récord histórico de puntos</span>
+            </div>
+
+            <div class="quiz-quote">
+              <em>"El error es la puerta del aprendizaje. Lee las explicaciones para dominar el método."</em>
+            </div>
+          </aside>
+        </div>
+
+        <!-- PANTALLA DE RESULTADOS DEL JUEGO -->
+        <div class="panel game-result-screen" id="gameResultScreen" style="display:none;">
+          <div class="result-celebration" id="resultCelebrationEmoji">🎉</div>
+          <h2 id="resultTitle">¡Partida Completada!</h2>
+          <p id="resultSubtitle">Has demostrado un excelente dominio de las ecuaciones diferenciales.</p>
+          
+          <div class="result-stats-row">
+            <div class="result-stat-box">
+              <span class="stat-number" id="resScore">850</span>
+              <span class="stat-label">Puntos Totales</span>
+            </div>
+            <div class="result-stat-box">
+              <span class="stat-number" id="resCorrect">8/10</span>
+              <span class="stat-label">Aciertos</span>
+            </div>
+            <div class="result-stat-box">
+              <span class="stat-number" id="resMaxStreak">5</span>
+              <span class="stat-label">Mejor Racha 🔥</span>
+            </div>
+            <div class="result-stat-box">
+              <span class="stat-number" id="resAccuracy">80%</span>
+              <span class="stat-label">Precisión</span>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button class="primary-button" id="btnPlayAgain">Jugar Otra Ronda <span>↻</span></button>
+            <button class="secondary-button" id="btnBackToModes">Elegir Otro Modo</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-formularios">
+        <div class="page-intro">
+          <div class="eyebrow">FORMULARIOS OFICIALES · DIFERENCIALLAB</div>
+          <h1>Formularios para Imprimir y Consultar</h1>
+          <p>Selecciona el formulario que deseas consultar e imprimir en alta resolución: <strong>Guía Oficial de Ecuaciones Diferenciales</strong>, <strong>Tabla de Derivadas</strong> o <strong>Tabla de Integrales</strong>.</p>
+          <div class="intro-actions-bar">
+            <button class="primary-button print-main-btn" id="btnPrintSheet">
+              <span>🖨️ Imprimir Lámina Activa</span>
+            </button>
+            <a href="tabla_edo_p1.jpg" download="DiferencialLab_Formulario_EDO_Parte1.jpg" class="secondary-button" id="btnDownloadActiveSheet">
+              <span>⬇️ Descargar Imagen HD</span>
+            </a>
+            <a href="formulario_ecuaciones_diferenciales.pdf" download="Formulario_Ecuaciones_Diferenciales_DiferencialLab.pdf" class="secondary-button" id="btnDownloadPdf" title="Descargar documento PDF completo de 2 páginas" target="_blank">
+              <span style="color: #f43f5e;">📄</span> Descargar PDF Completo
+            </a>
+          </div>
+        </div>
+
+        <!-- SELECTOR DE LÁMINAS Y FORMULARIOS -->
+        <div class="form-selector-tabs" role="tablist">
+          <button class="form-tab-btn active" data-form="edo1" id="tabBtnEdo1">
+            <span class="tab-emoji">⚡</span>
+            <div class="form-tab-text">
+              <strong>Formulario EDO (Pág. 1)</strong>
+              <small>Separables & Homogéneas</small>
+            </div>
+          </button>
+          <button class="form-tab-btn" data-form="edo2" id="tabBtnEdo2">
+            <span class="tab-emoji">🎯</span>
+            <div class="form-tab-text">
+              <strong>Formulario EDO (Pág. 2)</strong>
+              <small>Exactas & Factor Integrante</small>
+            </div>
+          </button>
+          <button class="form-tab-btn" data-form="derivadas" id="tabBtnDerivadas">
+            <span class="tab-emoji">📈</span>
+            <div class="form-tab-text">
+              <strong>Tabla de Derivadas</strong>
+              <small>32 Fórmulas Oficiales</small>
+            </div>
+          </button>
+          <button class="form-tab-btn" data-form="integrales" id="tabBtnIntegrales">
+            <span class="tab-emoji">∬</span>
+            <div class="form-tab-text">
+              <strong>Tabla de Integrales</strong>
+              <small>53 Fórmulas Oficiales</small>
+            </div>
+          </button>
+        </div>
+
+        <!-- VISOR DE LÁMINA CON CONTROLES E IMPRESIÓN DIRECTA -->
+        <div class="panel form-image-panel" id="formImageContainer">
+          <div class="image-viewer-toolbar">
+            <div class="toolbar-left">
+              <span class="toolbar-sheet-name" id="toolbarSheetTitle">Lámina Oficial: FORMULARIO DE EDOs (Pág. 1)</span>
+            </div>
+            <div class="toolbar-center">
+              <button class="viewer-btn" id="btnZoomOut" title="Alejar (Zoom -)">−</button>
+              <span class="zoom-display" id="zoomLevelDisplay">100%</span>
+              <button class="viewer-btn" id="btnZoomIn" title="Acercar (Zoom +)">+</button>
+              <button class="viewer-btn reset-btn" id="btnZoomReset" title="Restablecer tamaño">⟲ 100%</button>
+            </div>
+            <div class="toolbar-right">
+              <button class="viewer-btn print-quick-btn" id="btnQuickPrint">🖨️ Imprimir</button>
+            </div>
+          </div>
+
+          <div class="image-stage" id="imageStage">
+            <div class="image-viewport" id="imageViewport">
+              <img src="tabla_edo_p1.jpg?v=1" alt="Formulario de Ecuaciones Diferenciales" class="formula-sheet-img" id="mainFormulaImg">
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 

@@ -11,27 +11,73 @@
               <button class="secondary-button" data-go="formularios">Formularios <span>📑</span></button>
             </div>
           </div>
-          <div class="hero-art" aria-label="Ilustración matemática">
-            <div class="orb orb-one"></div><div class="orb orb-two"></div>
-            <div class="formula formula-one">dy/dx = f(x, y)</div>
-            <div class="formula formula-two">y = C·e<sup>kx</sup></div>
-            <div class="formula formula-three">m·y″ + c·y′ + k·y = 0</div>
-            <svg viewBox="0 0 420 280" role="img" aria-label="Gráfico de ondas y exponenciales">
-              <defs>
-                <linearGradient id="curveGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#54e4ff"/>
-                  <stop offset="100%" stop-color="#8a7dff"/>
-                </linearGradient>
-              </defs>
-              <g stroke="#355577" stroke-width="1" opacity=".35">
-                <path d="M30 30V250M80 30V250M130 30V250M180 30V250M230 30V250M280 30V250M330 30V250M380 30V250"/>
-                <path d="M25 50H400M25 90H400M25 130H400M25 170H400M25 210H400M25 250H400"/>
-              </g>
-              <path d="M25 220 C70 218,90 205,125 180 S180 110,215 95 S300 80,395 24" fill="none" stroke="url(#curveGrad)" stroke-width="3.5" stroke-linecap="round"/>
-              <path d="M25 235 C80 220,115 205,155 195 S240 145,280 120 S350 105,395 80" fill="none" stroke="#7d8cff" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
-              <path d="M25 75 C85 110,120 125,165 135 S255 175,300 200 S360 220,395 230" fill="none" stroke="#45d6b5" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
-              <circle cx="215" cy="95" r="6" fill="#e4fbff" stroke="#54e4ff" stroke-width="3"/>
-            </svg>
+          <div class="hero-art" aria-label="Ilustración matemática: Plano de Fase dinámico">
+            <div class="orb orb-one"></div>
+            <div class="orb orb-two"></div>
+
+            <div class="hero-graph-box">
+              <div class="hero-graph-grid"></div>
+              <div class="hero-graph-top">
+                <span class="phase-plane-tag"><span class="ping-dot"></span> Plano de Fase · ℝ²</span>
+                <span class="phase-plane-formula">dy/dx = f(x, y)</span>
+              </div>
+
+              <svg class="phase-plane-svg" viewBox="0 0 340 140" fill="none" role="img" aria-label="Órbitas en el plano de fase">
+                <defs>
+                  <filter id="curveGlowCyan" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"></feGaussianBlur>
+                    <feMerge>
+                      <feMergeNode in="blur"></feMergeNode>
+                      <feMergeNode in="SourceGraphic"></feMergeNode>
+                    </feMerge>
+                  </filter>
+                  <linearGradient id="tangentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#00f5d4" stop-opacity="0"></stop>
+                    <stop offset="50%" stop-color="#00f5d4" stop-opacity="0.8"></stop>
+                    <stop offset="100%" stop-color="#00f5d4" stop-opacity="0"></stop>
+                  </linearGradient>
+                </defs>
+                <!-- Ejes coordenados -->
+                <line x1="20" y1="120" x2="320" y2="120" stroke="rgba(168,85,247,0.25)" stroke-width="1"></line>
+                <line x1="20" y1="20" x2="20" y2="120" stroke="rgba(168,85,247,0.25)" stroke-width="1"></line>
+                <!-- Trayectoria 1: Curva S cian brillante -->
+                <path id="cyan-trajectory-path" d="M 20 115 C 90 115, 140 95, 200 45 C 245 10, 280 20, 320 22" fill="none" stroke="#00f5d4" stroke-width="2.5" stroke-linecap="round" filter="url(#curveGlowCyan)" opacity="0.95"></path>
+                <!-- Trayectoria 2: Arco violeta punteado animado -->
+                <path d="M 20 70 C 80 80, 130 95, 180 88 C 240 80, 270 45, 320 15" fill="none" stroke="#a855f7" stroke-dasharray="4 4" stroke-width="2" opacity="0.75">
+                  <animate attributeName="stroke-dashoffset" values="0; -32" dur="3s" repeatCount="indefinite"></animate>
+                </path>
+                <!-- Trayectoria 3: Asíntota con pendiente -->
+                <path d="M 20 30 C 100 48, 160 85, 230 115" fill="none" stroke="#6366f1" stroke-width="1.8" opacity="0.45"></path>
+                <!-- Halo difuso ambiental -->
+                <circle cx="280" cy="80" r="32" fill="#d946ef" opacity="0.18"></circle>
+                <!-- Partícula luminosa viajera -->
+                <circle r="4" fill="#ffffff" filter="url(#curveGlowCyan)">
+                  <animateMotion path="M 20 115 C 90 115, 140 95, 200 45 C 245 10, 280 20, 320 22" dur="5s" repeatCount="indefinite" keyTimes="0;0.5;1" keyPoints="0;0.55;1"></animateMotion>
+                </circle>
+                <!-- Fotón secundario cian -->
+                <circle r="2.5" fill="#00f5d4" opacity="0.75">
+                  <animateMotion path="M 20 115 C 90 115, 140 95, 200 45 C 245 10, 280 20, 320 22" dur="5s" begin="-0.35s" repeatCount="indefinite"></animateMotion>
+                </circle>
+                <!-- Nodo de equilibrio con halo dinámico -->
+                <g>
+                  <circle cx="200" cy="45" r="5" fill="#00f5d4"></circle>
+                  <circle cx="200" cy="45" r="10" stroke="#00f5d4" stroke-width="1.5" opacity="0.5">
+                    <animate attributeName="r" values="8;14;8" dur="2s" repeatCount="indefinite"></animate>
+                    <animate attributeName="opacity" values="0.7;0.1;0.7" dur="2s" repeatCount="indefinite"></animate>
+                  </circle>
+                </g>
+                <!-- Línea tangente animada -->
+                <line x1="165" y1="70" x2="235" y2="20" stroke="url(#tangentGrad)" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.8">
+                  <animate attributeName="y1" values="70; 65; 70" dur="4s" repeatCount="indefinite"></animate>
+                  <animate attributeName="y2" values="20; 25; 20" dur="4s" repeatCount="indefinite"></animate>
+                </line>
+              </svg>
+
+              <div class="hero-graph-bottom">
+                <span class="math-badge badge-amber">m·y″ + c·y′ + k·y = 0</span>
+                <span class="math-badge badge-cyan">y = C·e<sup>kx</sup></span>
+              </div>
+            </div>
           </div>
           <div class="hero-footer">
             <span>01 / LABORATORIO EDUCATIVO ACTIVO</span>

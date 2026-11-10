@@ -20,6 +20,7 @@ import { AprendeCuriosidadesController } from "./controladores/AprendeCuriosidad
 import { TriviaController } from "./controladores/TriviaController.js";
 import { FormulariosController } from "./controladores/FormulariosController.js";
 import { NavegacionController } from "./controladores/NavegacionController.js";
+import { IntroController } from "./controladores/IntroController.js";
 
 // ==============================================================================
 // COMPOSITION ROOT: INICIALIZACIÓN Y ENLACE DE DEPENDENCIAS (DDD)
@@ -59,16 +60,27 @@ const formulariosController = new FormulariosController({
   formulariosRepo,
   audioController
 });
+const introController = new IntroController();
 
 const navegacionController = new NavegacionController({
   audioController,
   onCambioVista: {
-    resolver: () => calculadoraController.resolver(),
-    formularios: () => formulariosController.cambiarTabla(formulariosController.claveActual || "edo1"),
+    resolver: () => {
+      introController.descartar();
+      calculadoraController.resolver();
+    },
+    formularios: () => {
+      introController.descartar();
+      formulariosController.cambiarTabla(formulariosController.claveActual || "edo1");
+    },
     aprender: () => {
+      introController.descartar();
       aprendeController.renderizarLeccion("concepto");
       aprendeController.renderizarCuriosidades();
       aprendeController.renderizarGuiaEstudio();
+    },
+    practicar: () => {
+      introController.descartar();
     }
   }
 });

@@ -5,7 +5,7 @@ Laboratorio Interactivo de Ecuaciones Diferenciales
 
 import os
 import sys
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request, redirect
 import sympy as sp
 import numpy as np
 
@@ -16,6 +16,13 @@ INTERFAZ_DIR = os.path.join(BASE_DIR, "interfaz")
 
 # Inicialización de la aplicación Flask
 app = Flask(__name__, template_folder=INTERFAZ_DIR, static_folder=None)
+
+# Redirección automática a HTTPS en producción (Railway)
+@app.before_request
+def force_https():
+    if request.headers.get("X-Forwarded-Proto") == "http":
+        url = request.url.replace("http://", "https://", 1)
+        return redirect(url, code=301)
 
 # Registro de la API REST modular
 app.register_blueprint(api_bp)
@@ -29,13 +36,12 @@ app.register_blueprint(api_bp)
 @app.route("/index.htm")
 @app.route("/interfaz/index.html")
 def index():
-    return render_template("index.html")
+    return send_from_directory(INTERFAZ_DIR, "index.html")
 
 @app.route("/<path:filename>")
 def serve_static(filename):
-    # Si solicitan index.html por cualquier ruta, renderizarlo con Jinja2
     if filename.lower() in ("index.html", "index.htm", "interfaz/index.html"):
-        return render_template("index.html")
+        return send_from_directory(INTERFAZ_DIR, "index.html")
     interfaz_file = os.path.join(INTERFAZ_DIR, filename)
     if os.path.exists(interfaz_file) and os.path.isfile(interfaz_file):
         return send_from_directory(INTERFAZ_DIR, filename)
