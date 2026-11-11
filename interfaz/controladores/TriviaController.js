@@ -3,6 +3,8 @@
  * Gamificación interactiva, vidas, cronómetro y feedback en pantalla (DDD)
  */
 
+import { PreguntaTrivia } from "../../logica/modelos/Trivia.js";
+
 export class TriviaController {
   constructor({ triviaService, backendApiAdapter, audioController }) {
     this.triviaService = triviaService;
@@ -24,8 +26,20 @@ export class TriviaController {
 
     // Selección de modo de juego
     document.querySelectorAll(".game-mode-card").forEach(card => {
-      card.addEventListener("click", () => {
-        this.iniciarPartida(card.dataset.mode);
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+
+      const activarModo = () => {
+        const modo = card.dataset.mode || "desafio";
+        this.iniciarPartida(modo);
+      };
+
+      card.addEventListener("click", activarModo);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          activarModo();
+        }
       });
     });
 
@@ -60,6 +74,19 @@ export class TriviaController {
       if (resScreen) resScreen.style.display = "none";
       if (modeSelection) modeSelection.style.display = "grid";
     });
+  }
+
+  prepararVista() {
+    const modeSelection = document.getElementById("gameModeSelection");
+    const activeGameArea = document.getElementById("activeGameArea");
+    const resScreen = document.getElementById("gameResultScreen");
+
+    // Si no hay partida en curso, garantizar que las opciones de modo sean visibles
+    if (!activeGameArea || activeGameArea.style.display !== "grid") {
+      if (modeSelection) modeSelection.style.display = "grid";
+      if (resScreen) resScreen.style.display = "none";
+      if (activeGameArea) activeGameArea.style.display = "none";
+    }
   }
 
   _cargarMejorPuntaje() {
@@ -107,9 +134,13 @@ export class TriviaController {
 
     // Intentar obtener preguntas desde API de Python si está disponible
     if (this.api && this.api.estaConectado) {
-      const preguntasApi = await this.api.obtenerPreguntas(modo === "desafio" ? 10 : 25);
-      if (preguntasApi && preguntasApi.length > 0) {
-        this.preguntas = preguntasApi;
+      try {
+        const preguntasApi = await this.api.obtenerPreguntas(modo === "desafio" ? 10 : 25);
+        if (preguntasApi && preguntasApi.length > 0) {
+          this.preguntas = preguntasApi.map(p => new PreguntaTrivia(p));
+        }
+      } catch (err) {
+        console.warn("Error al obtener preguntas del backend, usando repositorio local:", err);
       }
     }
 
@@ -224,7 +255,31 @@ export class TriviaController {
     clearInterval(this.temporizadorInterval);
 
     const q = this.preguntas[this.indicePregunta];
-    const resultado = this.triviaService.procesarRespuesta(q, indiceOpcion, this.segundosRestantes);
+    if (!q) return;
+
+    let resultado = null;
+    try {
+      resultado = this.triviaService.procesarRespuesta(q, indiceOpcion, this.segundosRestantes);
+    } catch (err) {
+      console.error("Error al procesar respuesta:", err);
+    }
+
+    if (!resultado) {
+      const esCorrecta = typeof q.esRespuestaCorrecta === "function"
+        ? q.esRespuestaCorrecta(indiceOpcion)
+        : Number(indiceOpcion) === Number(q.correcta);
+      resultado = {
+        esCorrecta,
+        puntosObtenidos: esCorrecta ? 100 : 0,
+        multiplicador: 1.0,
+        rachaActual: esCorrecta ? 1 : 0,
+        puntajeTotal: (this.triviaService.estadoActual?.puntaje || 0) + (esCorrecta ? 100 : 0),
+        explicacion: q.explicacion || "",
+        esTiempoAgotado: indiceOpcion === -1,
+        vidasRestantes: 3,
+        sigueVivo: true
+      };
+    }
 
     const botones = document.querySelectorAll(".answer-option");
     botones.forEach((b, i) => {

@@ -191,53 +191,58 @@ export class CalculadoraController {
         numSpan.textContent = s.num;
 
         const bodyDiv = document.createElement("div");
+        bodyDiv.className = "step-body";
         bodyDiv.style.flex = "1";
+        bodyDiv.style.minWidth = "0";
 
         const titleStrong = document.createElement("strong");
         titleStrong.textContent = s.titulo;
         bodyDiv.appendChild(titleStrong);
 
         const desc = s.descripcion || "";
-        if (desc.includes("\n\n")) {
-          const parts = desc.split("\n\n").map(p => p.trim()).filter(Boolean);
-          parts.forEach(part => {
-            // Distinguir bloques de fórmula LaTeX pura de bloques de texto explicativo
-            const esTextoPuro = part.includes("•") || part.startsWith("Nota") || part.startsWith("💡") || 
-                                part.startsWith("Escribimos") || part.startsWith("Separamos") || 
-                                part.startsWith("En esta") || part.startsWith("La familia") || 
-                                part.startsWith("El factor") || part.startsWith("Reemplazamos") ||
-                                part.startsWith("Sustituimos") || part.startsWith("Comprobamos");
-            const tieneSintaxisMath = part.startsWith("\\") || part.includes("=") || part.includes("\\frac") || part.includes("y{") || part.includes("y(");
-            
-            if (tieneSintaxisMath && !esTextoPuro) {
-              const mathBox = document.createElement("div");
-              mathBox.className = "step-math-box";
-              KatexAdapter.renderizar(mathBox, part, true);
-              bodyDiv.appendChild(mathBox);
-            } else {
-              const p = document.createElement("p");
-              p.textContent = part;
-              bodyDiv.appendChild(p);
+        const rawParts = desc.includes("\n\n")
+          ? desc.split("\n\n").map(p => p.trim()).filter(Boolean)
+          : [desc.trim()];
+
+        rawParts.forEach(part => {
+          if (this._esBloqueFormula(part)) {
+            const mathBox = document.createElement("div");
+            mathBox.className = "step-math-box";
+            KatexAdapter.renderizar(mathBox, part, true);
+            bodyDiv.appendChild(mathBox);
+          } else if (part.startsWith("💡") || part.toLowerCase().startsWith("nota")) {
+            const noteP = document.createElement("p");
+            noteP.className = "step-note";
+            noteP.textContent = part;
+            bodyDiv.appendChild(noteP);
+          } else if (part.includes(":\n")) {
+            const [textoIntro, ...resto] = part.split(":\n");
+            const introP = document.createElement("p");
+            introP.className = "step-text";
+            introP.textContent = textoIntro.trim() + ":";
+            bodyDiv.appendChild(introP);
+
+            const formulaRestante = resto.join(":\n").trim();
+            if (formulaRestante) {
+              if (this._esBloqueFormula(formulaRestante)) {
+                const mathBox = document.createElement("div");
+                mathBox.className = "step-math-box";
+                KatexAdapter.renderizar(mathBox, formulaRestante, true);
+                bodyDiv.appendChild(mathBox);
+              } else {
+                const subP = document.createElement("p");
+                subP.className = "step-text";
+                subP.textContent = formulaRestante;
+                bodyDiv.appendChild(subP);
+              }
             }
-          });
-        } else if (desc.includes(": ") && (desc.includes("\\") || desc.includes("y{"))) {
-          const idx = desc.indexOf(": ");
-          const intro = desc.substring(0, idx + 1);
-          const math = desc.substring(idx + 2);
-
-          const introP = document.createElement("p");
-          introP.textContent = intro;
-          bodyDiv.appendChild(introP);
-
-          const mathBox = document.createElement("div");
-          mathBox.className = "step-math-box";
-          KatexAdapter.renderizar(mathBox, math, true);
-          bodyDiv.appendChild(mathBox);
-        } else {
-          const introP = document.createElement("p");
-          introP.textContent = desc;
-          bodyDiv.appendChild(introP);
-        }
+          } else {
+            const p = document.createElement("p");
+            p.className = "step-text";
+            p.textContent = part;
+            bodyDiv.appendChild(p);
+          }
+        });
 
         stepDiv.appendChild(numSpan);
         stepDiv.appendChild(bodyDiv);
@@ -292,6 +297,34 @@ export class CalculadoraController {
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+  }
+
+  _esBloqueFormula(texto) {
+    if (!texto) return false;
+    const str = texto.trim();
+    if (!str) return false;
+
+    // Si termina en dos puntos, contiene viñetas o notas pedagógicas, es texto explicativo
+    if (str.endsWith(":") || str.includes("•") || str.startsWith("💡") || str.toLowerCase().startsWith("nota")) {
+      return false;
+    }
+
+    // Palabras en español comunes de explicaciones matemáticas y pedagógicas
+    const palabrasEspanol = /\b(el|la|los|las|un|una|de|del|en|para|por|con|como|que|se|es|al|entre|ambos|lados|miembro|miembros|variable|variables|ecuaci[oó]n|soluci[oó]n|funci[oó]n|derivada|diferencial|condici[oó]n|valor|inicial|constante|constantes|orden|forma|est[aá]ndar|can[oó]nica|m[eé]todo|integraci[oó]n|separaci[oó]n|despeje|antiderivada|ra[ií]z|ra[ií]ces|polinomio|exponencial|lineal|homog[eé]nea|euler|indica|veces|cada|curva|curvas|plano|obtenemos|aplicamos|integramos|multiplicamos|reordenamos|escribimos|separamos|resolvemos|sustituir|sustituyendo|reemplazando|despejando|identificando)\b/i;
+    if (palabrasEspanol.test(str)) {
+      return false;
+    }
+
+    // Si contiene varias palabras separadas por espacios típicas de prosa
+    const palabrasSeparadas = str.split(/\s+/).filter(w => /^[a-zA-ZáéíóúñÁÉÍÓÚÑ]{3,}$/.test(w));
+    if (palabrasSeparadas.length >= 2) {
+      return false;
+    }
+
+    // Si contiene símbolos o comandos LaTeX matemáticos
+    const tieneSintaxisMath = str.includes("\\") || str.includes("=") || 
+                              /\b(dy|dx|y\(x\)|C_\d|C\d|exp|ln)\b/.test(str);
+    return tieneSintaxisMath;
   }
 }
 

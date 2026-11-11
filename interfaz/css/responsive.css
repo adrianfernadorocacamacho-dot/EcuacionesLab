@@ -36,6 +36,7 @@
   .main-content {
     margin-left: 230px;
     padding: 0 20px 28px;
+    min-width: 0;
   }
   .feature-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -49,6 +50,14 @@
   .bottom-grid {
     grid-template-columns: 1fr;
     gap: 14px;
+  }
+  .solver-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .quiz-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
   .game-modes-grid {
     grid-template-columns: 1fr;
@@ -98,58 +107,91 @@
   /* Ajuste de espacio principal */
   .main-content {
     margin-left: 0;
-    padding: 0 16px 24px;
+    padding: 0 16px 28px;
     width: 100%;
+    max-width: 100vw;
     box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   /* Barra superior adaptable */
   .topbar {
-    height: 62px;
+    height: 60px;
     margin-bottom: 16px;
     gap: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
   .mobile-menu {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
-    font-size: 18px;
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 9px;
     flex-shrink: 0;
   }
   .breadcrumb {
     margin-right: auto;
     margin-left: 8px;
-    font-size: 12px;
+    font-size: 12.5px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   .topbar-btn-pill {
-    display: none; /* Ocultar botones redundantes en la barra superior móvil */
+    display: none; /* Ocultar píldoras redundantes en la barra superior móvil */
   }
 
-  /* Hero adaptable */
+  /* Hero centrado y legible en móvil */
   .hero {
     grid-template-columns: 1fr;
-    padding: 22px 18px 16px;
-    gap: 16px;
+    padding: 22px 18px 20px;
+    gap: 18px;
     overflow: hidden;
+    text-align: center;
+  }
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .hero-copy p {
+    text-align: center;
+    max-width: 100%;
   }
   .hero-art {
-    height: 160px;
+    min-height: 150px;
+    height: 150px;
     grid-row: 2;
     overflow: hidden;
+    width: 100%;
+    max-width: 100%;
   }
   .hero h1 {
     font-size: clamp(24px, 5.5vw, 34px);
     line-height: 1.25;
+    text-align: center;
+  }
+  .hero-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero-actions .primary-button,
+  .hero-actions .secondary-button {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
   .hero-footer {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 6px;
     font-size: 9px;
   }
@@ -165,7 +207,8 @@
   }
   .curiosity-dice-area {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: 12px;
   }
   .curiosity-dice-area .primary-button {
@@ -174,7 +217,7 @@
   }
   .study-guide-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 12px;
   }
   .study-guide-header .primary-button {
@@ -221,10 +264,12 @@
     font-size: 13.5px;
   }
   .main-content {
-    padding: 0 12px 20px;
+    padding: 0 12px 24px;
+    overflow-x: hidden;
   }
   .topbar {
     height: 56px;
+    margin-bottom: 12px;
   }
 
   /* Simplificación de la barra superior */
@@ -236,10 +281,19 @@
     font-size: 11px;
   }
   .backend-pill #backendStatusText {
-    display: none; /* En pantallas muy pequeñas, solo se muestra el indicador luminoso con tooltip */
+    display: none; /* En pantallas pequeñas se muestra solo el indicador luminoso con tooltip */
   }
 
-  /* Pestañas de estudio con scroll horizontal suave (Touch Swipe) */
+  /* Paneles compactos y centrados */
+  .panel {
+    padding: 16px 14px;
+    border-radius: 14px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Pestañas de estudio con scroll horizontal táctil */
   .topic-tabs {
     overflow-x: auto;
     white-space: nowrap;
@@ -257,81 +311,193 @@
     padding: 8px 14px;
   }
 
-  /* Botones de acción del hero en columna */
-  .hero-actions {
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-  }
-  .hero-actions .primary-button,
-  .hero-actions .secondary-button {
-    width: 100%;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-
-  /* Fórmulas matemáticas scrollables horizontalmente */
+  /* Fórmulas matemáticas centradas y scrolleables sin desbordamiento */
   .equation-display-box,
   .katex-display,
-  .step-math {
-    overflow-x: auto;
-    max-width: 100%;
+  .step-math-box,
+  .answer-box {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    padding: 10px 4px;
-    box-sizing: border-box;
   }
 
-  /* Calculadora */
-  .input-row {
-    grid-template-columns: 1fr;
+  .step-math-box .katex-display,
+  .equation-display-box .katex-display,
+  .answer-box .katex-display {
+    margin: 4px 0 !important;
+    padding: 2px 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .step-math-box .katex,
+  .equation-display-box .katex {
+    font-size: 1.12em !important;
+  }
+
+  /* Pasos del resolutor en móvil */
+  .step {
+    padding: 10px 12px;
     gap: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .step-body,
+  .step > div {
+    flex: 1 1 0%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .step-num {
+    width: 22px;
+    height: 22px;
+    font-size: 10.5px;
+  }
+  .step strong {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .step p,
+  .step-text {
+    font-size: 11.5px;
+    line-height: 1.55;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  .step-note {
+    font-size: 11px;
+    line-height: 1.45;
+    padding: 5px 8px;
+  }
+
+  /* Solución final destacada */
+  .answer-box {
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .answer-box strong,
+  .answer-box .answer-content {
+    font-size: 17px;
+    justify-content: center;
+    text-align: center;
+  }
+  .answer-box .katex {
+    font-size: 1.15em !important;
+  }
+
+  /* Calculadora: controles adaptados */
+  .input-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
   .solver-mode-selector {
     display: flex;
-    gap: 8px;
+    gap: 6px;
+    margin: 10px 0 12px;
   }
   .mode-btn {
     flex: 1;
-    font-size: 12px;
-    padding: 8px 10px;
+    font-size: 11.5px;
+    padding: 8px 6px;
     text-align: center;
+  }
+  .input-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .example-chip {
+    padding: 5px 8px;
+    font-size: 10.5px;
+    border-radius: 6px;
+  }
+  .primary-button.full {
+    padding: 13px 18px;
+    font-size: 13.5px;
+    border-radius: 10px;
+  }
+
+  /* Inputs accesibles sin zoom indeseado */
+  .solver-controls input,
+  .solver-controls select,
+  #customEquationInput {
+    font-size: 15px !important;
+    padding: 9px 10px;
   }
 
   /* HUD de la Trivia */
   .game-hud {
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding-bottom: 10px;
   }
   .hud-left {
-    order: 1;
-    flex: 1 1 auto;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
   }
   .hud-right {
-    order: 2;
-    flex: 1 1 auto;
-    justify-content: flex-end;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
   .hud-center {
-    order: 3;
     width: 100%;
-    text-align: center;
+    display: flex;
+    justify-content: center;
     padding: 4px 0;
+  }
+  .answer-options {
+    gap: 8px;
+  }
+  .answer-option {
+    padding: 12px 14px;
+    font-size: 12.5px;
+    line-height: 1.4;
   }
   .quiz-footer {
     flex-direction: column-reverse;
-    gap: 10px;
+    gap: 8px;
+    margin-top: 14px;
   }
   .quiz-footer button {
     width: 100%;
     justify-content: center;
+    padding: 12px;
+  }
+
+  /* Tarjetas de modo de juego en trivia */
+  .game-modes-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .game-mode-card {
+    padding: 18px 16px;
+    text-align: center;
+    align-items: center;
+  }
+  .game-mode-card h3 {
+    text-align: center;
+  }
+  .game-mode-card p {
+    text-align: center;
   }
 
   /* Formulario de impresión */
   .intro-actions-bar {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
   }
   .intro-actions-bar .primary-button,
@@ -341,12 +507,13 @@
     text-align: center;
   }
 
-  /* Footer */
+  /* Footer centrado */
   .footer {
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     text-align: center;
     align-items: center;
+    padding: 18px 0;
   }
 }
 
@@ -355,22 +522,35 @@
    ----------------------------------------------------------------------------- */
 @media (max-width: 380px) {
   .main-content {
-    padding: 0 8px 16px;
+    padding: 0 8px 18px;
   }
   .hero {
     padding: 16px 12px;
   }
   .panel {
-    padding: 16px 12px;
+    padding: 14px 10px;
+  }
+  .input-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
   .result-stats-row {
     grid-template-columns: 1fr;
   }
   .study-filter-btn {
-    font-size: 10.5px;
-    padding: 6px 10px;
+    font-size: 10px;
+    padding: 6px 8px;
   }
   .mode-btn-start {
-    font-size: 12px;
+    font-size: 11.5px;
+  }
+  .step {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .step-num {
+    width: 20px;
+    height: 20px;
+    font-size: 9.5px;
   }
 }

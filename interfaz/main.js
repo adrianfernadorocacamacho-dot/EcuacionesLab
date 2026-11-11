@@ -81,6 +81,7 @@ const navegacionController = new NavegacionController({
     },
     practicar: () => {
       introController.descartar();
+      triviaController.prepararVista();
     }
   }
 });

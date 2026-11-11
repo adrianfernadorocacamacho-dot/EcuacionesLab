@@ -127,27 +127,56 @@
   background: rgba(14, 8, 30, 0.9);
   border: 1px solid rgba(168, 85, 247, 0.35);
   border-radius: 12px;
-  padding: 14px 18px;
-  text-align: center;
+  padding: 12px 16px;
   margin: 14px 0;
   font-size: 18px;
   color: #38bdf8;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  -webkit-overflow-scrolling: touch;
 }
 
 .solution-steps {
-  display: grid;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin: 16px 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .step {
   display: flex;
   gap: 12px;
+  align-items: flex-start;
   padding: 12px 14px;
   background: rgba(26, 15, 52, 0.7);
   border-radius: 10px;
   border-left: 3px solid var(--purple);
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.step-body,
+.step > div {
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .step-num {
@@ -165,28 +194,81 @@
 
 .step strong {
   display: block;
-  font-size: 12.5px;
-  margin-bottom: 3px;
+  font-size: 13px;
+  margin-bottom: 5px;
   color: #ffffff;
+  line-height: 1.4;
 }
 
-.step p {
-  font-size: 11.5px;
+.step p,
+.step-text {
+  font-size: 12px;
   color: #c4b5fd;
-  margin: 0;
+  margin: 4px 0;
   line-height: 1.6;
   white-space: pre-line;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.step-note {
+  font-size: 11.5px;
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 2px solid #f59e0b;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin: 6px 0 4px;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .step-math-box {
-  background: rgba(14, 8, 30, 0.85);
-  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: rgba(14, 8, 30, 0.45);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   border-radius: 8px;
-  padding: 8px 12px;
-  margin-top: 6px;
+  padding: 6px 12px;
+  margin: 6px 0 4px;
   color: #38bdf8;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   overflow-x: auto;
-  font-size: 14px;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.step-math-box .katex-display,
+.equation-display-box .katex-display {
+  margin: 2px 0 !important;
+  padding: 2px 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+.step-math-box .katex-display > .katex,
+.equation-display-box .katex-display > .katex {
+  display: inline-block !important;
+  text-align: center !important;
+}
+
+.step-math-box .katex {
+  font-size: 1.22em !important;
+  color: #38bdf8 !important;
+  white-space: nowrap !important;
 }
 
 .light-mode .step-math-box {

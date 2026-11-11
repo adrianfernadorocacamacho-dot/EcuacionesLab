@@ -24,7 +24,9 @@ export class TriviaService {
   procesarRespuesta(pregunta, indiceOpcion, tiempoRestante = 0) {
     if (!this.estadoActual || !pregunta) return null;
 
-    const esCorrecta = pregunta.esRespuestaCorrecta(indiceOpcion);
+    const esCorrecta = typeof pregunta.esRespuestaCorrecta === "function"
+      ? pregunta.esRespuestaCorrecta(indiceOpcion)
+      : Number(indiceOpcion) === Number(pregunta.correcta);
 
     if (esCorrecta) {
       const res = this.estadoActual.registrarAcierto(tiempoRestante);
