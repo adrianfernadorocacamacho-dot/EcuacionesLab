@@ -137,5 +137,5 @@ def solve_ode_endpoint():
     except Exception as e:
         return jsonify({
             "error": f"No se pudo resolver la ecuación: {str(e)}",
-            "detalles": "Verifica la sintaxis (ejemplo: y' = 3*y, y' + 2*y = 4, y'' + 9*y = 0)"
+            "detalles": "Verifica la sintaxis (ejemplo: dy/dx = 2x, y' = 3y, y' + 2y = 4, y'' + 9y = 0)"
         }), 400

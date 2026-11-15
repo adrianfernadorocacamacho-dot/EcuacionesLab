@@ -6,6 +6,12 @@ import math
 import re
 import sympy as sp
 import numpy as np
+from sympy.parsing.sympy_parser import (
+    parse_expr,
+    standard_transformations,
+    implicit_multiplication_application,
+    convert_xor
+)
 
 def build_pedagogical_steps(eq, sol_gen, sol_part, x, y, x0, y0, y1, order):
     """
@@ -193,7 +199,7 @@ def build_pedagogical_steps(eq, sol_gen, sol_part, x, y, x0, y0, y1, order):
     steps.append({
         'num': len(steps) + 1,
         'titulo': 'Solución General de la EDO (Familia de Curvas)',
-        'descripcion': f'La familia infinita de curvas solución que satisfacen la ecuación diferencial es:\n\n{sp.latex(sol_gen)}\n\n💡 *Nota para estudiantes:* Cada valor posible de la constante C representa una curva diferente en el plano cartesiano.',
+        'descripcion': f'La familia infinita de curvas solución que satisfacen la ecuación diferencial es:\n\n{sp.latex(sol_gen)}\n\nNota pedagógica: Cada valor posible de la constante C representa una curva diferente en el plano cartesiano.',
         'tipo': 'general'
     })
     
@@ -205,7 +211,8 @@ def build_pedagogical_steps(eq, sol_gen, sol_part, x, y, x0, y0, y1, order):
         try:
             sx0 = sp.nsimplify(x0)
             sy0 = sp.nsimplify(y0)
-            sub_lhs = sol_gen.rhs.subs(x, sx0)
+            sol_gen_item = sol_gen[0] if isinstance(sol_gen, list) and len(sol_gen) > 0 else sol_gen
+            sub_lhs = sol_gen_item.rhs.subs(x, sx0) if hasattr(sol_gen_item, 'rhs') else sol_gen_item
             pvi_eq_latex = f'{sp.latex(sub_lhs)} = {sp.latex(sy0)}'
         except Exception:
             pvi_eq_latex = ''
@@ -226,30 +233,223 @@ def build_pedagogical_steps(eq, sol_gen, sol_part, x, y, x0, y0, y1, order):
         
     return steps
 
+def build_algebraic_steps(eq, sym, sol):
+    """
+    Genera un desglose didáctico y pedagógico paso a paso para ecuaciones
+    algebraicas lineales, cuadráticas y polinomiales (ej: 5x + 3 = 4x + 6).
+    """
+    steps = []
+    lhs = eq.lhs
+    rhs = eq.rhs
+    
+    # PASO 1: Identificación y planteamiento
+    steps.append({
+        'num': 1,
+        'titulo': 'Identificación y Planteamiento de la Ecuación',
+        'descripcion': f'Identificamos la ecuación algebraica con la incógnita {sym}:\n\n{sp.latex(eq)}',
+        'tipo': 'setup'
+    })
+    
+    degree = None
+    poly = None
+    try:
+        poly = sp.Poly(lhs - rhs, sym)
+        degree = poly.degree()
+    except Exception:
+        degree = None
+        
+    if degree == 1:
+        tipo_str = 'Ecuación Algebraica Lineal (Primer Grado)'
+        steps.append({
+            'num': 2,
+            'titulo': 'Clasificación de la Ecuación',
+            'descripcion': f'Se clasifica como una {tipo_str}. El exponente máximo de la variable {sym} es 1, por lo que posee una solución única.',
+            'tipo': 'clasificacion'
+        })
+        
+        # Agrupación de términos
+        terms_lhs = sp.Add.make_args(lhs)
+        terms_rhs = sp.Add.make_args(rhs)
+        
+        var_lhs = sum([t for t in terms_lhs if sym in t.free_symbols])
+        const_lhs = sum([t for t in terms_lhs if sym not in t.free_symbols])
+        var_rhs = sum([t for t in terms_rhs if sym in t.free_symbols])
+        const_rhs = sum([t for t in terms_rhs if sym not in t.free_symbols])
+        
+        step3_lhs = var_lhs - var_rhs
+        step3_rhs = const_rhs - const_lhs
+        
+        steps.append({
+            'num': 3,
+            'titulo': 'Trasposición de Términos',
+            'descripcion': f'Agrupamos los términos con la incógnita {sym} en el miembro izquierdo y las constantes numéricas en el miembro derecho:\n\n{sp.latex(sp.Eq(step3_lhs, step3_rhs))}',
+            'tipo': 'algebra'
+        })
+        
+        coeffs = poly.all_coeffs()
+        a_coef = coeffs[0]
+        b_const = -coeffs[1]
+        
+        steps.append({
+            'num': 4,
+            'titulo': 'Reducción de Términos Semejantes',
+            'descripcion': f'Efectuamos las sumas y restas algebraicas en ambos miembros:\n\n{sp.latex(sp.Eq(a_coef * sym, b_const))}',
+            'tipo': 'algebra'
+        })
+        
+        sol_val = sol[0] if sol else b_const / a_coef
+        steps.append({
+            'num': 5,
+            'titulo': 'Despeje de la Incógnita y Solución',
+            'descripcion': f'Dividimos ambos miembros entre el coeficiente {a_coef} para aislar {sym}:\n\n{sym} = {sp.latex(sol_val)}',
+            'tipo': 'particular'
+        })
+        
+        # Comprobación pedagógica
+        try:
+            lhs_eval = lhs.subs(sym, sol_val)
+            rhs_eval = rhs.subs(sym, sol_val)
+            steps.append({
+                'num': 6,
+                'titulo': 'Comprobación Pedagógica de la Igualdad',
+                'descripcion': f'Sustituimos {sym} = {sol_val} en la ecuación original:\n• Miembro izquierdo: {sp.latex(lhs)} \\implies {lhs_eval}\n• Miembro derecho: {sp.latex(rhs)} \\implies {rhs_eval}\n\n{lhs_eval} = {rhs_eval} \\quad \\checkmark \\text{{ (Identidad demostrada)}}',
+                'tipo': 'general'
+            })
+        except Exception:
+            pass
+            
+    elif degree == 2:
+        tipo_str = 'Ecuación Algebraica Cuadrática (Segundo Grado)'
+        coeffs = poly.all_coeffs()
+        a, b, c = coeffs[0], coeffs[1], coeffs[2]
+        disc = b**2 - 4*a*c
+        
+        steps.append({
+            'num': 2,
+            'titulo': 'Clasificación y Forma Canónica',
+            'descripcion': f'Se clasifica como una {tipo_str} de la forma ax² + bx + c = 0:\n\n{sp.latex(poly.as_expr())} = 0\n\nIdentificamos sus coeficientes: a = {a}, b = {b}, c = {c}.',
+            'tipo': 'clasificacion'
+        })
+        
+        steps.append({
+            'num': 3,
+            'titulo': 'Cálculo del Discriminante (Δ)',
+            'descripcion': f'El discriminante determina la naturaleza de las soluciones mediante Δ = b² - 4ac:\n\n\\Delta = ({b})^2 - 4({a})({c}) = {disc}',
+            'tipo': 'algebra'
+        })
+        
+        steps.append({
+            'num': 4,
+            'titulo': 'Aplicación de la Fórmula General Cuadrática',
+            'descripcion': f'Aplicamos la fórmula resolvente cuadrática:\n\n{sym} = \\frac{{-b \\pm \\sqrt{{\\Delta}}}}{{2a}} = \\frac{{-({b}) \\pm \\sqrt{{{disc}}}}}{{2({a})}}',
+            'tipo': 'metodo'
+        })
+        
+        sol_str = ', \\; '.join([f'{sym}_{{{i+1}}} = {sp.latex(s)}' for i, s in enumerate(sol)])
+        steps.append({
+            'num': 5,
+            'titulo': 'Soluciones / Raíces de la Ecuación',
+            'descripcion': f'Las soluciones obtenidas son:\n\n{sol_str}',
+            'tipo': 'particular'
+        })
+    else:
+        steps.append({
+            'num': 2,
+            'titulo': 'Resolución Algebraica',
+            'descripcion': f'Despejamos algebraicamente la incógnita {sym}:\n\n{sp.latex(eq)}',
+            'tipo': 'algebra'
+        })
+        sol_str = ', \\; '.join([f'{sym}_{{{i+1}}} = {sp.latex(s)}' for i, s in enumerate(sol)]) if sol else '\\text{Sin solución real}'
+        steps.append({
+            'num': 3,
+            'titulo': 'Valores que satisfacen la ecuación',
+            'descripcion': f'Solución obtenida:\n\n{sol_str}',
+            'tipo': 'particular'
+        })
+        
+    return steps
+
 def parse_and_solve_ode(eq_str, x0=0, y0=None, y1=None):
     """
-    Parsea una ecuación diferencial en notación estándar y la resuelve con SymPy.
-    Retorna la solución general, particular (si hay condiciones) y pasos explicativos.
+    Parsea una ecuación diferencial en notación matemática estándar o natural
+    (soporta dx/dy, dy/dx, y', y'', multiplicación implícita como 2x, 3y, etc.)
+    y la resuelve analíticamente con SymPy.
     """
     x = sp.Symbol('x')
     y = sp.Function('y')
     
     clean_str = eq_str.strip()
+    clean_str = clean_str.replace('−', '-').replace('–', '-').replace('·', '*').replace('×', '*')
+    
+    # Superíndices unicode (², ³, etc.) a potencias ^
+    unicode_powers = {'⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9'}
+    for u, digit in unicode_powers.items():
+        clean_str = clean_str.replace(u, f'^{digit}')
+        
+    # Normalizar notaciones de derivada
+    clean_str = re.sub(r'd\^?2y\s*/\s*dx\^?2', "y''", clean_str, flags=re.I)
+    clean_str = re.sub(r'd\^?2x\s*/\s*dy\^?2', "y''", clean_str, flags=re.I)
+    clean_str = re.sub(r'dy\s*/\s*dx', "y'", clean_str, flags=re.I)
+    clean_str = re.sub(r'dx\s*/\s*dy', "y'", clean_str, flags=re.I)
+    clean_str = re.sub(r'd\s*/\s*dx\s*\(?\s*y\s*\)?', "y'", clean_str, flags=re.I)
+    clean_str = re.sub(r'd\s*/\s*dy\s*\(?\s*x\s*\)?', "y'", clean_str, flags=re.I)
+    
+    # Si no tiene signo igual, interpretar como y' = f(x) o expr = 0
     if '=' in clean_str:
         lhs_str, rhs_str = clean_str.split('=', 1)
     else:
-        lhs_str, rhs_str = clean_str, '0'
+        if "y'" in clean_str or "y''" in clean_str:
+            lhs_str, rhs_str = clean_str, '0'
+        else:
+            lhs_str, rhs_str = "y'", clean_str
         
     def transform_part(s):
-        s = s.replace("d2y/dx2", "y(x).diff(x, 2)")
-        s = s.replace("dy/dx", "y(x).diff(x)")
-        s = s.replace("y''", "y(x).diff(x, 2)")
-        s = s.replace("y'", "y(x).diff(x)")
-        # Reemplazar y por y(x) cuando sea variable aislada
-        s = re.sub(r'\by\b(?!\()', 'y(x)', s)
-        # Soporte para potencias tipo ^ -> **
-        s = s.replace('^', '**')
-        return s
+        e = s.strip()
+        if not e:
+            return '0'
+            
+        # e^(...) o e^x -> exp(...)
+        e = re.sub(r'\be\^\(([^)]+)\)', r'exp(\1)', e)
+        e = re.sub(r'\be\^([a-zA-Z0-9_]+)', r'exp(\1)', e)
+        
+        # ln -> log
+        e = re.sub(r'\bln\b', 'log', e)
+        
+        # Proteger derivadas usando tokens alfabéticos puros sin números
+        e = e.replace("y''", "DIFFTWO").replace("y'", "DIFFONE")
+        
+        # Multiplicación implícita:
+        # Número seguido de letra (2x -> 2*x, 2y -> 2*y)
+        e = re.sub(r'(\d+(?:\.\d+)?)\s*([a-zA-Z])', r'\1*\2', e)
+        # Número seguido de paréntesis: 2(x+1) -> 2*(x+1)
+        e = re.sub(r'(\d+(?:\.\d+)?)\s*\(', r'\1*(', e)
+        # Paréntesis seguido de paréntesis: )( -> )*(
+        e = re.sub(r'\)\s*\(', r')*(', e)
+        # Paréntesis seguido de letra/número: )x -> )*x
+        e = re.sub(r'\)\s*([a-zA-Z0-9])', r')*\1', e)
+        
+        # Variable x seguida de y: xy -> x*y, x y -> x*y
+        e = re.sub(r'\bx\s*y\b', 'x*y', e)
+        e = re.sub(r'\by\s*x\b', 'y*x', e)
+        
+        # x seguido de paréntesis (que no sea función)
+        e = re.sub(r'\bx\s*\(', 'x*(', e)
+        
+        # Variable x seguida de función: x sin(x) -> x*sin(x), x exp(x) -> x*exp(x)
+        funcs = ['sin', 'cos', 'tan', 'exp', 'log', 'sqrt']
+        for fn in funcs:
+            e = re.sub(r'(\bx)\s*(' + fn + r'\b)', r'\1*\2', e)
+            
+        # Ahora que 2y es 2*y, reemplazamos cualquier y aislada por y(x)
+        e = re.sub(r'\by\b(?!\()', 'y(x)', e)
+        
+        # Restaurar derivadas a sintaxis SymPy
+        e = e.replace('DIFFTWO', 'y(x).diff(x, 2)')
+        e = e.replace('DIFFONE', 'y(x).diff(x)')
+        
+        # ^ -> **
+        e = e.replace('^', '**')
+        return e
 
     lhs_expr_str = transform_part(lhs_str)
     rhs_expr_str = transform_part(rhs_str)
@@ -260,13 +460,63 @@ def parse_and_solve_ode(eq_str, x0=0, y0=None, y1=None):
         'ln': sp.log, 'log': sp.log, 'e': sp.E, 'pi': sp.pi,
         'sqrt': sp.sqrt
     }
+    transformations = standard_transformations + (implicit_multiplication_application, convert_xor)
     
-    lhs = sp.nsimplify(sp.parse_expr(lhs_expr_str, local_dict=local_dict))
-    rhs = sp.nsimplify(sp.parse_expr(rhs_expr_str, local_dict=local_dict))
+    lhs = sp.nsimplify(parse_expr(lhs_expr_str, local_dict=local_dict, transformations=transformations))
+    rhs = sp.nsimplify(parse_expr(rhs_expr_str, local_dict=local_dict, transformations=transformations))
     eq = sp.Eq(lhs, rhs)
     
     # Clasificación y orden de la ecuación
     derivs = [d for d in eq.atoms(sp.Derivative) if d.expr == y(x)]
+    if not derivs:
+        # ES UNA ECUACIÓN ALGEBRAICA (ej: 5x + 3 = 4x + 6, x^2 - 4 = 0)
+        syms = list(eq.free_symbols)
+        if x in syms:
+            sym = x
+        elif y in syms:
+            sym = y
+        elif syms:
+            sym = syms[0]
+        else:
+            sym = x
+            
+        sol = sp.solve(eq, sym)
+        steps = build_algebraic_steps(eq, sym, sol)
+        
+        plot_points = []
+        try:
+            diff_func = eq.lhs - eq.rhs
+            center_x = float(sol[0]) if sol and hasattr(sol[0], 'is_real') and sol[0].is_real else 0.0
+            f_num = sp.lambdify(sym, diff_func, modules=['numpy', 'math'])
+            xs = np.linspace(center_x - 4.0, center_x + 4.0, 100)
+            for val_x in xs:
+                try:
+                    val_y = float(f_num(val_x))
+                    if not math.isnan(val_y) and not math.isinf(val_y) and abs(val_y) < 1e5:
+                        plot_points.append({"x": round(float(val_x), 3), "y": round(float(val_y), 4)})
+                except Exception:
+                    continue
+        except Exception:
+            plot_points = []
+            
+        if sol:
+            if len(sol) == 1:
+                sol_str_latex = f"{sym} = {sp.latex(sol[0])}"
+            else:
+                sol_str_latex = ", \\; ".join([f"{sym}_{{{i+1}}} = {sp.latex(s)}" for i, s in enumerate(sol)])
+        else:
+            sol_str_latex = "\\text{Sin solución real}"
+            
+        return {
+            "latex_eq": sp.latex(eq),
+            "latex_general": sol_str_latex,
+            "str_general": str(sol),
+            "latex_particular": sol_str_latex,
+            "str_particular": sol_str_latex,
+            "order": 0,
+            "steps": steps,
+            "plot_points": plot_points
+        }
     order = max([len(d.variables) for d in derivs], default=1)
     
     # Resolver solución general
@@ -308,7 +558,8 @@ def parse_and_solve_ode(eq_str, x0=0, y0=None, y1=None):
     plot_points = []
     active_sol = sol_part if sol_part is not None else sol_gen
     try:
-        rhs_func = active_sol.rhs
+        sol_item = active_sol[0] if isinstance(active_sol, list) and len(active_sol) > 0 else active_sol
+        rhs_func = getattr(sol_item, 'rhs', sol_item)
         # Si aún quedan constantes C1, sustituimos C1=1 para ilustrar
         free_symbols = rhs_func.free_symbols - {x}
         subs_dict = {sym: 1.0 for sym in free_symbols}

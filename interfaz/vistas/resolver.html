@@ -9,7 +9,7 @@
           <!-- PANEL IZQUIERDO: CONTROLES -->
           <div class="panel solver-controls">
             <div class="panel-header-clean">
-              <span class="feature-icon blue">⚡</span>
+              <span class="feature-icon blue"><svg class="ui-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
               <div>
                 <h3 style="margin: 0; font-size: 16px;">Configurar Ecuación</h3>
                 <small style="color: #94a3b8; font-size: 11px;">Elige un modelo guiado o escribe tu propia ecuación libre</small>
@@ -47,17 +47,17 @@
             <!-- CONTROLES MODO CUSTOM (ENTRADA LIBRE) -->
             <div id="customControlsArea" style="display: none;">
               <label for="customEquationInput">Escribe tu ecuación diferencial:</label>
-              <input type="text" id="customEquationInput" placeholder="Ej: y' + 2*y = 4, y' = 3*y, y'' + 9*y = 0" value="y' + 2*y = 4">
+              <input type="text" id="customEquationInput" placeholder="Ej: dy/dx = 2x, y' + 2y = 4, y' = 3y, y'' + 9y = 0" value="dy/dx = 2x">
               
               <div class="input-examples">
                 <span style="font-weight: 600;">Ejemplos rápidos:</span>
-                <button type="button" class="example-chip" data-eq="y' = 3*y">y' = 3y</button>
-                <button type="button" class="example-chip" data-eq="y' + 2*y = 4">y' + 2y = 4</button>
-                <button type="button" class="example-chip" data-eq="y'' + 9*y = 0">y'' + 9y = 0</button>
-                <button type="button" class="example-chip" data-eq="y' = -0.5*(y - 20)">Newton</button>
-                <button type="button" class="example-chip" data-eq="y' = 2*x**2">y' = 2x²</button>
+                <button type="button" class="example-chip" data-eq="dy/dx = 2x">dy/dx = 2x</button>
+                <button type="button" class="example-chip" data-eq="y' = 3y">y' = 3y</button>
+                <button type="button" class="example-chip" data-eq="y' + 2y = 4">y' + 2y = 4</button>
+                <button type="button" class="example-chip" data-eq="y'' + 9y = 0">y'' + 9y = 0</button>
+                <button type="button" class="example-chip" data-eq="y' = 2x^2">y' = 2x²</button>
               </div>
-              <small style="display: block; margin-top: 8px; color: #94a3b8; font-size: 11px;">Sintaxis: usa <code>y'</code> para dy/dx, <code>y''</code> para d²y/dx², <code>*</code> para multiplicar y <code>**</code> para potencias.</small>
+              <small style="display: block; margin-top: 8px; color: #94a3b8; font-size: 11px;">Sintaxis natural: puedes escribir <code>2x</code>, <code>3y</code>, <code>dy/dx</code>, <code>2x^2</code> directamente sin necesidad de usar <code>*</code>.</small>
             </div>
 
             <!-- SECCIÓN CONDICIONES INICIALES -->
@@ -80,11 +80,11 @@
             </div>
 
             <button type="button" class="primary-button full" id="solveButton" style="margin-top: 18px;">
-              <span>⚡</span> Resolver Paso a Paso
+              <svg class="ui-icon" viewBox="0 0 24 24" style="margin-right: 6px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Resolver Paso a Paso
             </button>
 
             <div class="small-note" id="solverEngineNote" style="margin-top: 14px;">
-              ✦ Modo didáctico: Explicación pedagógica detallada paso a paso.
+              <svg class="ui-icon spark-icon" viewBox="0 0 24 24" style="color:var(--yellow); margin-right:4px;"><path d="M12 2l2.4 6.9L21.3 11l-6.9 2.1L12 20l-2.4-6.9L2.7 11l6.9-2.1z"/></svg> Modo didáctico: Explicación pedagógica detallada paso a paso.
             </div>
           </div>
 

@@ -280,7 +280,7 @@ export class CalculadoraController {
     if (stepsContainer) {
       stepsContainer.innerHTML = `
         <div class="step" style="border-left-color: #ef4444;">
-          <span class="step-num" style="background: rgba(239, 68, 68, 0.3); color: #f87171;">⚠️</span>
+          <span class="step-num" style="background: rgba(239, 68, 68, 0.3); color: #f87171;"><svg class="ui-icon" viewBox="0 0 24 24" style="color:#f87171;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
           <div>
             <strong style="color: #f87171;">${msg}</strong>
             <p style="color: #fca5a5; font-size: 11.5px; margin-top: 4px;">${details}</p>

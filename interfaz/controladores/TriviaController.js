@@ -379,11 +379,15 @@ export class TriviaController {
     if (resumen.esMaestro) {
       this._desbloquearLogro("maestro");
       if (this.audio) this.audio.celebrar();
-      if (celebrationEmoji) celebrationEmoji.textContent = "🏆";
+      if (celebrationEmoji) {
+        celebrationEmoji.innerHTML = `<svg class="ui-icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H8v4h8v-4h-1c-.55 0-1-.45-1-1v-2.34"/><path d="M18 4H6v7a6 6 0 0 0 12 0V4z"/></svg>`;
+      }
       if (resultTitle) resultTitle.textContent = "¡Dominio Magistral de EDOs!";
     } else {
       if (this.audio) this.audio.correcto();
-      if (celebrationEmoji) celebrationEmoji.textContent = "🎉";
+      if (celebrationEmoji) {
+        celebrationEmoji.innerHTML = `<svg class="ui-icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+      }
       if (resultTitle) resultTitle.textContent = "¡Buen Trabajo y Esfuerzo!";
     }
   }

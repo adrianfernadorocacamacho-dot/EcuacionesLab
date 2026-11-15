@@ -139,3 +139,126 @@
   filter: grayscale(1);
 }
 
+/* ==============================================================================
+   ICONOS SVG DEL SISTEMA (UI-ICON)
+   ============================================================================== */
+.ui-icon {
+  width: 1.15em;
+  height: 1.15em;
+  display: inline-block;
+  vertical-align: -0.22em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.ui-icon-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.ui-icon.spark-icon {
+  fill: currentColor;
+  stroke: none;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+}
+
+.ui-icon.heart-svg {
+  fill: #ef4444;
+  stroke: none;
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.ui-icon.flame-svg {
+  stroke: #f97316;
+  fill: rgba(249, 115, 22, 0.2);
+}
+
+.nav-link span .ui-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.topbar-btn-pill span .ui-icon {
+  width: 15px;
+  height: 15px;
+  vertical-align: middle;
+}
+
+.feature-icon .ui-icon {
+  width: 22px;
+  height: 22px;
+  vertical-align: middle;
+}
+
+.tab-emoji .ui-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.card-arrow .ui-icon, .mode-btn-start .ui-icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: -0.15em;
+  transition: transform 0.2s ease;
+}
+
+.card:hover .card-arrow .ui-icon,
+.mode-card:hover .mode-btn-start .ui-icon {
+  transform: translate(2px, -2px);
+}
+
+.filter-chip .ui-icon, .study-filter-btn .ui-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  vertical-align: -0.18em;
+}
+
+.badge-tag .ui-icon {
+  width: 13px;
+  height: 13px;
+  margin-right: 4px;
+  vertical-align: -0.18em;
+}
+
+.spotlight-icon .ui-icon {
+  width: 44px;
+  height: 44px;
+  color: #c084fc;
+}
+
+.curiosity-card-icon .ui-icon {
+  width: 26px;
+  height: 26px;
+  color: #a78bfa;
+}
+
+.mode-icon .ui-icon {
+  width: 32px;
+  height: 32px;
+  color: #c084fc;
+}
+
+.dice-icon {
+  width: 44px;
+  height: 44px;
+  color: #c084fc;
+  filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.5));
+}
+
+.step-num .ui-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+
+

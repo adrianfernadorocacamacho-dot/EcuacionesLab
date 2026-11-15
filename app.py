@@ -67,4 +67,4 @@ if __name__ == "__main__":
     print(f"  Servidor activo en: http://{host}:{port}")
     print("  Abre esa dirección en tu navegador para interactuar.")
     print("=" * 65)
-    app.run(host=host, port=port, debug=False)
+    app.run(host=host, port=port, debug=True)

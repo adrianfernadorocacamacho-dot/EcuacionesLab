@@ -8,24 +8,24 @@
         <!-- SELECTOR DE MODO DE JUEGO -->
         <div class="game-modes-grid" id="gameModeSelection">
           <div class="game-mode-card" data-mode="desafio">
-            <div class="mode-icon">⏱️</div>
+            <div class="mode-icon"><svg class="ui-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
             <h3>Modo Desafío Exprés</h3>
             <p>10 preguntas aleatorias con temporizador de 20s. ¡Gana puntos extra por rapidez y combo!</p>
-            <span class="mode-btn-start">Iniciar Desafío <span>→</span></span>
+            <span class="mode-btn-start">Iniciar Desafío <svg class="ui-icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
           </div>
 
           <div class="game-mode-card" data-mode="supervivencia">
-            <div class="mode-icon">❤️</div>
+            <div class="mode-icon"><svg class="ui-icon heart-svg" viewBox="0 0 24 24" style="color:#ef4444;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
             <h3>Modo Supervivencia</h3>
             <p>Empiezas con 3 vidas. Cada error te resta un corazón. ¿Hasta qué ronda podrás llegar?</p>
-            <span class="mode-btn-start">Probar Resistencia <span>→</span></span>
+            <span class="mode-btn-start">Probar Resistencia <svg class="ui-icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
           </div>
 
           <div class="game-mode-card" data-mode="practica">
-            <div class="mode-icon">🎓</div>
+            <div class="mode-icon"><svg class="ui-icon" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg></div>
             <h3>Práctica Libre</h3>
             <p>Aprende a tu propio ritmo sin presión de tiempo, con explicaciones detalladas en cada respuesta.</p>
-            <span class="mode-btn-start">Entrenar sin Prisa <span>→</span></span>
+            <span class="mode-btn-start">Entrenar sin Prisa <svg class="ui-icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
           </div>
         </div>
 
@@ -39,17 +39,17 @@
                 <span id="quizCounter" class="hud-counter">PREGUNTA 1 DE 10</span>
               </div>
               <div class="hud-center" id="hudTimerArea">
-                <span class="timer-icon">⏳</span>
+                <span class="timer-icon"><svg class="ui-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
                 <span id="timerSeconds">20s</span>
               </div>
               <div class="hud-right">
                 <div class="lives-container" id="livesDisplay" style="display:none;">
-                  <span class="heart active">❤️</span>
-                  <span class="heart active">❤️</span>
-                  <span class="heart active">❤️</span>
+                  <span class="heart active"><svg class="ui-icon heart-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+                  <span class="heart active"><svg class="ui-icon heart-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+                  <span class="heart active"><svg class="ui-icon heart-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
                 </div>
                 <div class="combo-badge" id="comboBadge" style="display:none;">
-                  <span>🔥</span> <strong id="comboMultiplier">x2 COMBO</strong>
+                  <span><svg class="ui-icon flame-svg" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span> <strong id="comboMultiplier">x2 COMBO</strong>
                 </div>
                 <div class="score-display">
                   <span class="score-label">PUNTOS</span>
@@ -79,13 +79,13 @@
             <!-- PIE DEL JUEGO -->
             <div class="quiz-footer">
               <button class="secondary-button" id="btnExitGame">Salir al menú</button>
-              <button class="primary-button" id="nextQuestion" disabled>Siguiente pregunta <span>→</span></button>
+              <button class="primary-button" id="nextQuestion" disabled>Siguiente pregunta <svg class="ui-icon" viewBox="0 0 24 24" style="margin-left:4px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
             </div>
           </div>
 
           <!-- PANEL LATERAL DE LOGROS Y DATOS -->
           <aside class="panel quiz-aside">
-            <span class="feature-icon orange">◈</span>
+            <span class="feature-icon orange"><svg class="ui-icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="6"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/></svg></span>
             <h3>Laboratorio de Retos</h3>
             <p>Cada pregunta está basada en el temario de ecuaciones diferenciales y sus aplicaciones del mundo real.</p>
             
@@ -112,7 +112,7 @@
 
         <!-- PANTALLA DE RESULTADOS DEL JUEGO -->
         <div class="panel game-result-screen" id="gameResultScreen" style="display:none;">
-          <div class="result-celebration" id="resultCelebrationEmoji">🎉</div>
+          <div class="result-celebration" id="resultCelebrationEmoji"><svg class="ui-icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#a855f7" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
           <h2 id="resultTitle">¡Partida Completada!</h2>
           <p id="resultSubtitle">Has demostrado un excelente dominio de las ecuaciones diferenciales.</p>
           
@@ -127,7 +127,7 @@
             </div>
             <div class="result-stat-box">
               <span class="stat-number" id="resMaxStreak">5</span>
-              <span class="stat-label">Mejor Racha 🔥</span>
+              <span class="stat-label">Mejor Racha <svg class="ui-icon flame-svg" viewBox="0 0 24 24" style="width:12px; height:12px; vertical-align:-0.1em;"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
             </div>
             <div class="result-stat-box">
               <span class="stat-number" id="resAccuracy">80%</span>
@@ -136,7 +136,7 @@
           </div>
 
           <div class="result-actions">
-            <button class="primary-button" id="btnPlayAgain">Jugar Otra Ronda <span>↻</span></button>
+            <button class="primary-button" id="btnPlayAgain">Jugar Otra Ronda <svg class="ui-icon" viewBox="0 0 24 24" style="margin-left:4px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
             <button class="secondary-button" id="btnBackToModes">Elegir Otro Modo</button>
           </div>
         </div>

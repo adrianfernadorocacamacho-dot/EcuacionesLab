@@ -115,12 +115,12 @@ async function iniciarAplicacion() {
     if (pill) pill.className = "backend-pill online";
     if (text) text.textContent = "Servidor Activo";
     if (pill) pill.title = `Conectado al servidor Python local con SymPy ${estado.sympyVersion}`;
-    if (note) note.textContent = "✦ Modo didáctico: Explicación pedagógica detallada paso a paso.";
+    if (note) note.innerHTML = `<svg class="ui-icon spark-icon" viewBox="0 0 24 24" style="color:var(--yellow); margin-right:4px;"><path d="M12 2l2.4 6.9L21.3 11l-6.9 2.1L12 20l-2.4-6.9L2.7 11l6.9-2.1z"/></svg> Modo didáctico: Explicación pedagógica detallada paso a paso.`;
   } else {
     if (pill) pill.className = "backend-pill offline";
     if (text) text.textContent = "Modo Navegador";
     if (pill) pill.title = "Ejecutando con motor JavaScript local de respaldo.";
-    if (note) note.textContent = "✦ Modo didáctico: Resuelve paso a paso con explicaciones claras.";
+    if (note) note.innerHTML = `<svg class="ui-icon spark-icon" viewBox="0 0 24 24" style="color:var(--yellow); margin-right:4px;"><path d="M12 2l2.4 6.9L21.3 11l-6.9 2.1L12 20l-2.4-6.9L2.7 11l6.9-2.1z"/></svg> Modo didáctico: Resuelve paso a paso con explicaciones claras.`;
   }
 
   // Primera resolución pedagógica
