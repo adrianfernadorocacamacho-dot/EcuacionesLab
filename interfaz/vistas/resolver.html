@@ -17,12 +17,42 @@
             </div>
 
             <div class="solver-mode-selector">
-              <button type="button" class="mode-btn active" id="btnModePreset">Modelos Guiados</button>
-              <button type="button" class="mode-btn" id="btnModeCustom">Entrada Libre</button>
+              <button type="button" class="mode-btn active" id="btnModeCustom">
+                <svg class="ui-icon" viewBox="0 0 24 24" style="width:14px; height:14px; margin-right:4px;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+                Entrada Libre & Problemario
+              </button>
+              <button type="button" class="mode-btn" id="btnModePreset">Modelos Guiados</button>
             </div>
 
-            <!-- CONTROLES MODO PRESET -->
-            <div id="presetControlsArea">
+            <!-- CONTROLES MODO CUSTOM (ENTRADA LIBRE & PROBLEMARIO) -->
+            <div id="customControlsArea">
+              <label for="customEquationInput">Escribe tu ecuación diferencial (o algebraica):</label>
+              <input type="text" id="customEquationInput" placeholder="Ej: (D^2 - 2D + 2)^3 y = 0, (6x^2 - 7y^2)dx - 14xy dy = 0" value="(D^2 - 2D + 2)^3 y = 0">
+              
+              <div class="input-examples">
+                <div class="problemario-cat-title"><svg class="ui-icon" viewBox="0 0 24 24" style="width:13px; height:13px; color:#38bdf8;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Libro FIME - Ejercicios Principales:</div>
+                <button type="button" class="example-chip chip-fime" data-eq="(D^2 - 2D + 2)^3 y = 0">(D² - 2D + 2)³ y = 0 (Ej. 5)</button>
+                <button type="button" class="example-chip chip-fime" data-eq="(D^4 + 2D^3 + 10D^2)y = 0">(D⁴ + 2D³ + 10D²)y = 0 (Ej. 3)</button>
+                <button type="button" class="example-chip chip-fime" data-eq="(D^2 + 36)^2 y = 0">(D² + 36)² y = 0 (Ej. 4)</button>
+
+                <div class="problemario-cat-title">Capítulo 3 (Operador D y PVI):</div>
+                <button type="button" class="example-chip" data-eq="(D^2 + 9D + 18)y = 0">(D² + 9D + 18)y = 0</button>
+                <button type="button" class="example-chip" data-eq="(D^2 - D - 2)y = sen(2x)">(D² - D - 2)y = sen(2x)</button>
+                <button type="button" class="example-chip" data-eq="(D^2 + 2D + 1)y = 0 ; y = 1, Dy = -1 cuando x = 0">(D² + 2D + 1)y = 0 (PVI)</button>
+
+                <div class="problemario-cat-title">Capítulo 2 (1er Orden):</div>
+                <button type="button" class="example-chip" data-eq="(6x^2 - 7y^2)dx - 14xy dy = 0">(6x² - 7y²)dx - 14xy dy = 0</button>
+                <button type="button" class="example-chip" data-eq="(2x cos y + 3x^2 y)dx + (x^3 - x^2 sen y - y)dy = 0">(2x cos y + 3x²y)dx + ... = 0</button>
+                <button type="button" class="example-chip" data-eq="5x^4 dx + 20y^19 dy = 0">5x⁴ dx + 20y¹⁹ dy = 0</button>
+                <button type="button" class="example-chip" data-eq="dy/dx - 3y = 6">dy/dx - 3y = 6</button>
+                <button type="button" class="example-chip" data-eq="dx/dy = 2x">dx/dy = 2x</button>
+                <button type="button" class="example-chip" data-eq="5x + 3 = 4x + 6">5x + 3 = 4x + 6</button>
+              </div>
+              <small style="display: block; margin-top: 10px; color: #94a3b8; font-size: 11px;">Sintaxis natural UANL: soporta <code>M dx + N dy = 0</code>, <code>(D² + aD + b)y = g(x)</code>, <code>dy/dx</code>, <code>dx/dy</code>, funciones en español (<code>sen</code>, <code>tg</code>, <code>ctg</code>) y potencias con o sin <code>^</code>.</small>
+            </div>
+
+            <!-- CONTROLES MODO PRESET (MODELOS GUIADOS) -->
+            <div id="presetControlsArea" style="display: none;">
               <label for="solverType">Tipo de Ecuación Diferencial:</label>
               <select id="solverType">
                 <option value="exp">Crecimiento / Decaimiento (y' = k·y)</option>
@@ -42,22 +72,9 @@
                   <input type="number" id="paramB" value="4" step="0.5">
                 </div>
               </div>
-            </div>
-
-            <!-- CONTROLES MODO CUSTOM (ENTRADA LIBRE) -->
-            <div id="customControlsArea" style="display: none;">
-              <label for="customEquationInput">Escribe tu ecuación diferencial:</label>
-              <input type="text" id="customEquationInput" placeholder="Ej: dy/dx = 2x, y' + 2y = 4, y' = 3y, y'' + 9y = 0" value="dy/dx = 2x">
-              
-              <div class="input-examples">
-                <span style="font-weight: 600;">Ejemplos rápidos:</span>
-                <button type="button" class="example-chip" data-eq="dy/dx = 2x">dy/dx = 2x</button>
-                <button type="button" class="example-chip" data-eq="y' = 3y">y' = 3y</button>
-                <button type="button" class="example-chip" data-eq="y' + 2y = 4">y' + 2y = 4</button>
-                <button type="button" class="example-chip" data-eq="y'' + 9y = 0">y'' + 9y = 0</button>
-                <button type="button" class="example-chip" data-eq="y' = 2x^2">y' = 2x²</button>
+              <div style="margin-top: 10px; font-size: 11.5px; color: #94a3b8;">
+                <svg class="ui-icon spark-icon" viewBox="0 0 24 24" style="width:13px; height:13px; color:var(--yellow); vertical-align:middle; margin-right:3px;"><path d="M12 2l2.4 6.9L21.3 11l-6.9 2.1L12 20l-2.4-6.9L2.7 11l6.9-2.1z"/></svg> ¿Buscas los ejercicios del Problemario UANL? Haz clic en la pestaña <strong>Entrada Libre & Problemario</strong> arriba.
               </div>
-              <small style="display: block; margin-top: 8px; color: #94a3b8; font-size: 11px;">Sintaxis natural: puedes escribir <code>2x</code>, <code>3y</code>, <code>dy/dx</code>, <code>2x^2</code> directamente sin necesidad de usar <code>*</code>.</small>
             </div>
 
             <!-- SECCIÓN CONDICIONES INICIALES -->

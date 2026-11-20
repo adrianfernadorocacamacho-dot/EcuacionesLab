@@ -16,6 +16,14 @@ INTERFAZ_DIR = os.path.join(BASE_DIR, "interfaz")
 
 # Inicialización de la aplicación Flask
 app = Flask(__name__, template_folder=INTERFAZ_DIR, static_folder=None)
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
+
+@app.after_request
+def add_no_cache_headers(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 # Redirección automática a HTTPS en producción (Railway)
 @app.before_request

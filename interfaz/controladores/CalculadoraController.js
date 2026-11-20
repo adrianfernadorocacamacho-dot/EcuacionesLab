@@ -11,32 +11,41 @@ export class CalculadoraController {
     this.resolutor = resolutorService;
     this.api = backendApiAdapter;
     this.audio = audioController;
-    this.modo = "preset"; // "preset" o "custom"
+    this.modo = "custom"; // Modo predeterminado: Entrada Libre & Problemario
+  }
+
+  cambiarModo(modo) {
+    this.modo = modo;
+    const btnPreset = document.getElementById("btnModePreset");
+    const btnCustom = document.getElementById("btnModeCustom");
+    const areaPreset = document.getElementById("presetControlsArea");
+    const areaCustom = document.getElementById("customControlsArea");
+    if (modo === "custom") {
+      if (btnCustom) btnCustom.classList.add("active");
+      if (btnPreset) btnPreset.classList.remove("active");
+      if (areaPreset) areaPreset.style.display = "none";
+      if (areaCustom) areaCustom.style.display = "block";
+    } else {
+      if (btnPreset) btnPreset.classList.add("active");
+      if (btnCustom) btnCustom.classList.remove("active");
+      if (areaPreset) areaPreset.style.display = "block";
+      if (areaCustom) areaCustom.style.display = "none";
+    }
   }
 
   inicializar() {
     const btnPreset = document.getElementById("btnModePreset");
     const btnCustom = document.getElementById("btnModeCustom");
-    const areaPreset = document.getElementById("presetControlsArea");
-    const areaCustom = document.getElementById("customControlsArea");
 
     if (btnPreset && btnCustom) {
       btnPreset.addEventListener("click", () => {
-        this.modo = "preset";
-        btnPreset.classList.add("active");
-        btnCustom.classList.remove("active");
-        if (areaPreset) areaPreset.style.display = "block";
-        if (areaCustom) areaCustom.style.display = "none";
+        this.cambiarModo("preset");
         if (this.audio) this.audio.click();
         this.resolver();
       });
 
       btnCustom.addEventListener("click", () => {
-        this.modo = "custom";
-        btnCustom.classList.add("active");
-        btnPreset.classList.remove("active");
-        if (areaPreset) areaPreset.style.display = "none";
-        if (areaCustom) areaCustom.style.display = "block";
+        this.cambiarModo("custom");
         if (this.audio) this.audio.click();
         this.resolver();
       });
@@ -45,8 +54,10 @@ export class CalculadoraController {
     // Chips de ejemplos rápidos
     document.querySelectorAll(".example-chip").forEach(chip => {
       chip.addEventListener("click", () => {
+        this.cambiarModo("custom");
+        const eq = chip.dataset.eq;
         const input = document.getElementById("customEquationInput");
-        if (input) input.value = chip.dataset.eq;
+        if (input) input.value = eq;
         if (this.audio) this.audio.click();
         this.resolver();
       });
@@ -199,50 +210,73 @@ export class CalculadoraController {
         titleStrong.textContent = s.titulo;
         bodyDiv.appendChild(titleStrong);
 
-        const desc = s.descripcion || "";
-        const rawParts = desc.includes("\n\n")
-          ? desc.split("\n\n").map(p => p.trim()).filter(Boolean)
-          : [desc.trim()];
-
-        rawParts.forEach(part => {
-          if (this._esBloqueFormula(part)) {
-            const mathBox = document.createElement("div");
-            mathBox.className = "step-math-box";
-            KatexAdapter.renderizar(mathBox, part, true);
-            bodyDiv.appendChild(mathBox);
-          } else if (part.startsWith("💡") || part.toLowerCase().startsWith("nota")) {
-            const noteP = document.createElement("p");
-            noteP.className = "step-note";
-            noteP.textContent = part;
-            bodyDiv.appendChild(noteP);
-          } else if (part.includes(":\n")) {
-            const [textoIntro, ...resto] = part.split(":\n");
-            const introP = document.createElement("p");
-            introP.className = "step-text";
-            introP.textContent = textoIntro.trim() + ":";
-            bodyDiv.appendChild(introP);
-
-            const formulaRestante = resto.join(":\n").trim();
-            if (formulaRestante) {
-              if (this._esBloqueFormula(formulaRestante)) {
-                const mathBox = document.createElement("div");
-                mathBox.className = "step-math-box";
-                KatexAdapter.renderizar(mathBox, formulaRestante, true);
-                bodyDiv.appendChild(mathBox);
-              } else {
-                const subP = document.createElement("p");
-                subP.className = "step-text";
-                subP.textContent = formulaRestante;
-                bodyDiv.appendChild(subP);
-              }
-            }
-          } else {
+        if (s.explicacion !== undefined || s.latex !== undefined) {
+          if (s.explicacion) {
             const p = document.createElement("p");
             p.className = "step-text";
-            p.textContent = part;
+            p.textContent = s.explicacion;
             bodyDiv.appendChild(p);
           }
-        });
+
+          if (s.latex && s.latex.trim().length > 0) {
+            const mathBox = document.createElement("div");
+            mathBox.className = "step-math-box";
+            KatexAdapter.renderizar(mathBox, s.latex, true);
+            bodyDiv.appendChild(mathBox);
+          }
+
+          if (s.nota) {
+            const noteP = document.createElement("p");
+            noteP.className = "step-note";
+            noteP.textContent = `Nota pedagógica: ${s.nota}`;
+            bodyDiv.appendChild(noteP);
+          }
+        } else {
+          const desc = s.descripcion || "";
+          const rawParts = desc.includes("\n\n")
+            ? desc.split("\n\n").map(p => p.trim()).filter(Boolean)
+            : [desc.trim()];
+
+          rawParts.forEach(part => {
+            if (this._esBloqueFormula(part)) {
+              const mathBox = document.createElement("div");
+              mathBox.className = "step-math-box";
+              KatexAdapter.renderizar(mathBox, part, true);
+              bodyDiv.appendChild(mathBox);
+            } else if (part.startsWith("💡") || part.toLowerCase().startsWith("nota")) {
+              const noteP = document.createElement("p");
+              noteP.className = "step-note";
+              noteP.textContent = part;
+              bodyDiv.appendChild(noteP);
+            } else if (part.includes(":\n")) {
+              const [textoIntro, ...resto] = part.split(":\n");
+              const introP = document.createElement("p");
+              introP.className = "step-text";
+              introP.textContent = textoIntro.trim() + ":";
+              bodyDiv.appendChild(introP);
+
+              const formulaRestante = resto.join(":\n").trim();
+              if (formulaRestante) {
+                if (this._esBloqueFormula(formulaRestante)) {
+                  const mathBox = document.createElement("div");
+                  mathBox.className = "step-math-box";
+                  KatexAdapter.renderizar(mathBox, formulaRestante, true);
+                  bodyDiv.appendChild(mathBox);
+                } else {
+                  const subP = document.createElement("p");
+                  subP.className = "step-text";
+                  subP.textContent = formulaRestante;
+                  bodyDiv.appendChild(subP);
+                }
+              }
+            } else {
+              const p = document.createElement("p");
+              p.className = "step-text";
+              p.textContent = part;
+              bodyDiv.appendChild(p);
+            }
+          });
+        }
 
         stepDiv.appendChild(numSpan);
         stepDiv.appendChild(bodyDiv);
